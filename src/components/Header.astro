@@ -16,15 +16,15 @@ const currentPath = Astro.url.pathname;
   </div>
   <nav class="header-nav sl-flex">
     <div class="nav-item">
-      <a href={`${base}vulkan/`} class="nav-top" aria-current={currentPath.startsWith('/vulkan') ? 'page' : undefined}>Vulkan</a>
-      <div class="nav-dropdown">
-        <a href={`${base}vulkan/`}>Vulkan Spec</a>
+      <a href={`${base}vulkan/`} class="nav-top" aria-current={currentPath.startsWith('/vulkan') ? 'page' : undefined} aria-expanded="false" aria-controls="dd-vulkan">Vulkan</a>
+      <div class="nav-dropdown" id="dd-vulkan" role="menu">
+        <a href={`${base}vulkan/`} role="menuitem">Vulkan Spec</a>
       </div>
     </div>
     <div class="nav-item">
-      <a href={`${base}cuda/`} class="nav-top" aria-current={currentPath.startsWith('/cuda') ? 'page' : undefined}>CUDA</a>
-      <div class="nav-dropdown">
-        <a href={`${base}cuda/`}>CUDA Guide</a>
+      <a href={`${base}cuda/`} class="nav-top" aria-current={currentPath.startsWith('/cuda') ? 'page' : undefined} aria-expanded="false" aria-controls="dd-cuda">CUDA</a>
+      <div class="nav-dropdown" id="dd-cuda" role="menu">
+        <a href={`${base}cuda/`} role="menuitem">CUDA Guide</a>
       </div>
     </div>
   </nav>
@@ -37,6 +37,37 @@ const currentPath = Astro.url.pathname;
     </a>
   </div>
 </div>
+
+<script>
+  document.querySelectorAll('.nav-item').forEach((item) => {
+    const top = item.querySelector('.nav-top');
+    const dd = item.querySelector('.nav-dropdown');
+    if (!top || !dd) return;
+
+    // Touch: toggle dropdown on tap
+    top.addEventListener('click', (e) => {
+      if (!window.matchMedia('(hover: none)').matches) return;
+      const open = top.getAttribute('aria-expanded') === 'true';
+      // Close all others
+      document.querySelectorAll('.nav-item .nav-top').forEach((t) => t.setAttribute('aria-expanded', 'false'));
+      if (!open) {
+        e.preventDefault();
+        top.setAttribute('aria-expanded', 'true');
+      }
+    });
+
+    // Hover: sync aria-expanded
+    item.addEventListener('mouseenter', () => top.setAttribute('aria-expanded', 'true'));
+    item.addEventListener('mouseleave', () => top.setAttribute('aria-expanded', 'false'));
+  });
+
+  // Close dropdowns on outside click
+  document.addEventListener('click', (e) => {
+    if (!(e.target as HTMLElement).closest('.nav-item')) {
+      document.querySelectorAll('.nav-item .nav-top').forEach((t) => t.setAttribute('aria-expanded', 'false'));
+    }
+  });
+</script>
 
 <style>
   .header {
@@ -79,7 +110,6 @@ const currentPath = Astro.url.pathname;
     align-items: center;
   }
 
-  /* --- Nav item with dropdown --- */
   .nav-item {
     position: relative;
   }
@@ -99,6 +129,10 @@ const currentPath = Astro.url.pathname;
     color: #ffffff;
     background: rgba(255, 255, 255, 0.1);
   }
+  .nav-top:focus-visible {
+    outline: 2px solid var(--cd-accent);
+    outline-offset: 2px;
+  }
   .nav-top[aria-current='page'] {
     color: #ffffff;
     background: rgba(255, 255, 255, 0.12);
@@ -114,7 +148,8 @@ const currentPath = Astro.url.pathname;
     z-index: 100;
   }
 
-  .nav-item:hover .nav-dropdown {
+  .nav-item:hover .nav-dropdown,
+  .nav-top[aria-expanded='true'] + .nav-dropdown {
     display: block;
   }
 
@@ -133,11 +168,16 @@ const currentPath = Astro.url.pathname;
   .nav-dropdown a:hover {
     background: var(--cd-bg-hover);
   }
+  .nav-dropdown a:focus-visible {
+    outline: 2px solid var(--cd-accent);
+    outline-offset: -2px;
+  }
 
   .right-group {
     gap: 0.5rem;
     align-items: center;
     flex-shrink: 0;
+    margin-inline-start: auto;
   }
 
   .github-link {
