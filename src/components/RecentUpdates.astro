@@ -1,14 +1,27 @@
 ---
+import type { Update } from '../data/updates';
 import { updates } from '../data/updates';
 
-const sorted = [...updates].sort(
+interface Props {
+  category?: Update['category'];
+}
+
+const { category } = Astro.props;
+
+const filtered = category
+  ? updates.filter((u) => u.category === category)
+  : updates;
+
+const sorted = [...filtered].sort(
   (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
 );
 
-const categoryLabel: Record<string, string> = {
+const categoryLabel: Record<Update['category'], string> = {
   vulkan: 'Vulkan',
   cuda: 'CUDA',
 };
+
+const showBadge = !category;
 ---
 
 <section class="recent-updates">
@@ -16,12 +29,14 @@ const categoryLabel: Record<string, string> = {
   <ul class="update-list">
     {sorted.map((item) => (
       <li class="update-item">
-        <span class={`category-badge badge-${item.category}`}>
-          {categoryLabel[item.category]}
-        </span>
+        {showBadge && (
+          <span class={`category-badge badge-${item.category}`}>
+            {categoryLabel[item.category]}
+          </span>
+        )}
         <a href={item.href} class="update-link">{item.title}</a>
         <time datetime={item.date}>
-          {item.date.slice(5).replace('-', '.')}
+          {item.date.slice(5).replaceAll('-', '.')}
         </time>
       </li>
     ))}
