@@ -16,12 +16,6 @@ const sorted = [...filtered].sort(
   (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
 );
 
-const categoryLabel: Record<Update['category'], string> = {
-  vulkan: 'Vulkan',
-  cuda: 'CUDA',
-};
-
-const showBadge = !category;
 ---
 
 <section class="recent-updates">
@@ -29,11 +23,9 @@ const showBadge = !category;
   <ul class="update-list">
     {sorted.map((item) => (
       <li class="update-item">
-        {showBadge && (
-          <span class={`category-badge badge-${item.category}`}>
-            {categoryLabel[item.category]}
-          </span>
-        )}
+        <span class={`category-badge badge-${item.category}`}>
+          {item.source}
+        </span>
         <a href={item.href} class="update-link">{item.title}</a>
         <time datetime={item.date}>
           {item.date.slice(5).replaceAll('-', '.')}

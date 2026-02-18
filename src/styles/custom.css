@@ -159,7 +159,55 @@ header.header starlight-theme-select select {
 
 /* ===== Hero Section ===== */
 .hero {
-  padding-bottom: 2rem;
+  padding-bottom: 1rem;
+}
+
+/* ===== Profile Card ===== */
+.profile-card {
+  text-align: center;
+  max-width: var(--sl-content-width);
+  margin: 0 auto 2rem;
+  padding: 0 1rem;
+}
+
+.profile-name {
+  color: var(--cd-text-secondary);
+  font-size: var(--sl-text-sm);
+  margin: 0 0 0.5rem;
+}
+
+.profile-desc {
+  color: var(--cd-text-primary);
+  font-size: var(--sl-text-sm);
+  margin: 0 0 0.75rem;
+}
+
+.profile-links {
+  display: flex;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+.profile-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--cd-text-secondary);
+  font-size: var(--sl-text-xs);
+  text-decoration: none;
+  padding: 4px 10px;
+  border: 1px solid var(--cd-border-color);
+  border-radius: 16px;
+  transition: color 0.15s, border-color 0.15s;
+}
+
+.profile-link:hover {
+  color: var(--cd-text-link);
+  border-color: var(--cd-text-link);
+}
+
+.profile-link svg {
+  flex-shrink: 0;
 }
 
 /* ===== Card Grid ===== */
