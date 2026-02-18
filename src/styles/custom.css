@@ -350,6 +350,13 @@ starlight-menu-button button:hover {
   flex-shrink: 0;
 }
 
+.update-empty {
+  color: var(--cd-text-secondary);
+  font-size: var(--sl-text-sm);
+  font-style: italic;
+  margin: 0;
+}
+
 @media (max-width: 30rem) {
   .update-item {
     flex-wrap: wrap;
