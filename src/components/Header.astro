@@ -10,6 +10,10 @@ import ThemeSelect from 'virtual:starlight/components/ThemeSelect';
       </svg>
       <span translate="no">CDDing</span>
     </a>
+    <nav class="header-nav sl-hidden md:sl-flex">
+      <a href="/vulkan/">Vulkan</a>
+      <a href="/cuda/">CUDA</a>
+    </nav>
   </div>
   <div class="sl-hidden md:sl-flex print:hidden right-group">
     <ThemeSelect />
@@ -35,6 +39,8 @@ import ThemeSelect from 'virtual:starlight/components/ThemeSelect';
     margin: -0.25rem;
     min-width: 0;
     flex-shrink: 0;
+    align-items: center;
+    gap: 1rem;
   }
 
   .site-title {
@@ -55,6 +61,25 @@ import ThemeSelect from 'virtual:starlight/components/ThemeSelect';
     height: 22px;
     fill: var(--cd-header-text);
     flex-shrink: 0;
+  }
+
+  .header-nav {
+    gap: 0.75rem;
+    align-items: center;
+  }
+
+  .header-nav a {
+    color: var(--cd-text-secondary);
+    font-size: 0.82rem;
+    font-weight: 500;
+    text-decoration: none;
+    padding: 4px 8px;
+    border-radius: 4px;
+    transition: color 0.15s, background 0.15s;
+  }
+  .header-nav a:hover {
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.1);
   }
 
   .right-group {

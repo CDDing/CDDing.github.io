@@ -223,6 +223,105 @@ starlight-menu-button button:hover {
   border: 1px solid var(--cd-accent);
 }
 
+/* ===== Recent Updates List ===== */
+.recent-updates {
+  max-width: var(--sl-content-width);
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.recent-updates h2 {
+  font-size: var(--sl-text-h3);
+  color: var(--cd-text-heading);
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+
+.update-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.update-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.6rem 0;
+  border-bottom: 1px solid var(--cd-border-subtle);
+}
+
+.update-item:last-child {
+  border-bottom: none;
+}
+
+.category-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 0.68rem;
+  font-family: var(--sl-font-mono);
+  font-weight: 500;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.badge-vulkan {
+  background: rgba(239, 68, 68, 0.1);
+  color: #f87171;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.badge-cuda {
+  background: rgba(34, 197, 94, 0.1);
+  color: #4ade80;
+  border: 1px solid rgba(34, 197, 94, 0.3);
+}
+
+:root[data-theme='light'] .badge-vulkan {
+  background: rgba(220, 38, 38, 0.08);
+  color: #dc2626;
+  border: 1px solid rgba(220, 38, 38, 0.2);
+}
+
+:root[data-theme='light'] .badge-cuda {
+  background: rgba(22, 163, 74, 0.08);
+  color: #16a34a;
+  border: 1px solid rgba(22, 163, 74, 0.2);
+}
+
+.update-link {
+  color: var(--cd-text-primary);
+  text-decoration: none;
+  font-size: var(--sl-text-sm);
+  font-weight: 500;
+  flex: 1;
+  min-width: 0;
+  transition: color 0.15s;
+}
+
+.update-link:hover {
+  color: var(--cd-text-link);
+}
+
+.update-item time {
+  color: var(--cd-text-secondary);
+  font-size: var(--sl-text-xs);
+  font-family: var(--sl-font-mono);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+@media (max-width: 30rem) {
+  .update-item {
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+  .update-item time {
+    margin-left: auto;
+  }
+}
+
 /* ===== Print Styles ===== */
 @media print {
   header.header,
