@@ -7,18 +7,17 @@ hero:
   tagline: GPU 프로그래밍 명세와 가이드를 한국어로 정리합니다.
 ---
 
-import { Card, CardGrid } from '@astrojs/starlight/components';
+import { LinkCard, CardGrid } from '@astrojs/starlight/components';
 
 <CardGrid>
-  <Card title="Vulkan 명세 한글 해설" icon="rocket">
-    Vulkan API 명세를 챕터별로 요약·해설합니다.
-    실제 명세 구조를 따라가며 핵심 개념을 한국어로 정리했습니다.
-
-    [바로 가기 →](https://cdding.github.io/vk_spec_ko/)
-  </Card>
-  <Card title="CUDA 가이드 한글 해설" icon="laptop">
-    CUDA Programming Guide를 한국어로 해설합니다.
-
-    *준비 중*
-  </Card>
+  <LinkCard
+    title="Vulkan"
+    description="Vulkan API 관련 한글 해설 프로젝트"
+    href="/vulkan/"
+  />
+  <LinkCard
+    title="CUDA"
+    description="CUDA 프로그래밍 관련 한글 해설 프로젝트"
+    href="/cuda/"
+  />
 </CardGrid>

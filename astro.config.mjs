@@ -22,7 +22,10 @@ export default defineConfig({
         Header: './src/components/Header.astro',
       },
       customCss: ['./src/styles/custom.css'],
-      sidebar: [],
+      sidebar: [
+        { label: 'Vulkan', slug: 'vulkan' },
+        { label: 'CUDA', slug: 'cuda' },
+      ],
     }),
   ],
 });
