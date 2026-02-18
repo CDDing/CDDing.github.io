@@ -1,0 +1,85 @@
+---
+import config from 'virtual:starlight/user-config';
+import ThemeSelect from 'virtual:starlight/components/ThemeSelect';
+---
+
+<div class="header sl-flex">
+  <div class="title-wrapper sl-flex">
+    <a href={import.meta.env.BASE_URL} class="site-title sl-flex">
+      <svg class="site-logo" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path d="M12 2L2 7v10l10 5 10-5V7L12 2zm0 2.18L19.35 7.5 12 10.82 4.65 7.5 12 4.18zM4 8.83l7 3.5V19.5l-7-3.5V8.83zm9 10.67V12.33l7-3.5V15.5l-7 3.5z"/>
+      </svg>
+      <span translate="no">CDDing</span>
+    </a>
+  </div>
+  <div class="sl-hidden md:sl-flex print:hidden right-group">
+    <ThemeSelect />
+    <a href="https://github.com/CDDing" rel="me" class="sl-flex github-link" aria-label="GitHub">
+      <svg width="18" height="18" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+        <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/>
+      </svg>
+    </a>
+  </div>
+</div>
+
+<style>
+  .header {
+    gap: var(--sl-nav-gap);
+    justify-content: space-between;
+    align-items: center;
+    height: 100%;
+  }
+
+  .title-wrapper {
+    overflow: clip;
+    padding: 0.25rem;
+    margin: -0.25rem;
+    min-width: 0;
+    flex-shrink: 0;
+  }
+
+  .site-title {
+    align-items: center;
+    gap: 8px;
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: #e6edf3;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+  .site-title:hover {
+    color: #ffffff;
+  }
+
+  .site-logo {
+    width: 22px;
+    height: 22px;
+    fill: #e6edf3;
+    flex-shrink: 0;
+  }
+
+  .right-group {
+    gap: 0.5rem;
+    align-items: center;
+    flex-shrink: 0;
+  }
+
+  .github-link {
+    color: #e6edf3;
+    padding: 6px;
+    border-radius: 4px;
+    transition: background 0.15s;
+  }
+  .github-link:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #ffffff;
+  }
+
+  @media (min-width: 50rem) {
+    .header {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      align-content: center;
+    }
+  }
+</style>

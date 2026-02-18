@@ -1,0 +1,233 @@
+/* ===== Font Imports ===== */
+@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.min.css');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap');
+
+/* ===== Starlight Theme Overrides — Dark (default) ===== */
+:root,
+:root[data-theme='dark'] {
+  /* Fonts */
+  --__sl-font: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  --__sl-font-mono: 'JetBrains Mono', 'Consolas', monospace;
+  --sl-font: var(--__sl-font);
+  --sl-font-mono: var(--__sl-font-mono);
+
+  /* Accent colors */
+  --sl-color-accent-low: rgba(167, 139, 250, 0.1);
+  --sl-color-accent: #a78bfa;
+  --sl-color-accent-high: #c4b5fd;
+
+  --sl-color-white: #f0f6fc;
+  --sl-color-gray-1: #e6edf3;
+  --sl-color-gray-2: #8b949e;
+  --sl-color-gray-3: #6e7681;
+  --sl-color-gray-4: #30363d;
+  --sl-color-gray-5: #21262d;
+  --sl-color-gray-6: #161b22;
+  --sl-color-black: #0d1117;
+
+  --sl-color-bg-nav: #161b22;
+  --sl-color-bg-sidebar: #0d1117;
+  --sl-color-hairline-shade: #30363d;
+  --sl-color-hairline-light: #21262d;
+
+  --sl-color-text: #e6edf3;
+  --sl-color-text-accent: #e6edf3;
+  --sl-color-text-invert: #0d1117;
+
+  /* Layout */
+  --sl-nav-height: 48px;
+  --sl-content-width: 800px;
+
+  /* Typography */
+  --sl-text-xs: 0.68rem;
+  --sl-text-sm: 0.78rem;
+  --sl-text-base: 0.82rem;
+  --sl-text-body: 0.82rem;
+  --sl-text-h1: 1.6rem;
+  --sl-text-h2: 1.25rem;
+  --sl-text-h3: 1.05rem;
+  --sl-text-h4: 0.88rem;
+  --sl-text-code: 0.82em;
+  --sl-line-height: 1.75;
+  --sl-line-height-headings: 1.3;
+
+  /* Custom properties */
+  --cd-bg-page: #0d1117;
+  --cd-bg-header: #161b22;
+  --cd-bg-card: #161b22;
+  --cd-bg-hover: #1c2129;
+  --cd-text-primary: #e6edf3;
+  --cd-text-secondary: #8b949e;
+  --cd-text-heading: #f0f6fc;
+  --cd-text-link: #a78bfa;
+  --cd-text-link-hover: #c4b5fd;
+  --cd-border-color: #30363d;
+  --cd-border-subtle: #21262d;
+  --cd-accent: #a78bfa;
+  --cd-accent-hover: #c4b5fd;
+  --cd-accent-bg: rgba(167, 139, 250, 0.1);
+  --cd-shadow-header: 0 1px 2px rgba(0, 0, 0, 0.4);
+}
+
+/* ===== Starlight Theme Overrides — Light ===== */
+:root[data-theme='light'] {
+  --sl-color-accent-low: rgba(124, 58, 237, 0.08);
+  --sl-color-accent: #7c3aed;
+  --sl-color-accent-high: #6d28d9;
+
+  --sl-color-white: #1f2328;
+  --sl-color-gray-1: #1f2328;
+  --sl-color-gray-2: #656d76;
+  --sl-color-gray-3: #8b949e;
+  --sl-color-gray-4: #d0d7de;
+  --sl-color-gray-5: #e3e8ed;
+  --sl-color-gray-6: #f6f8fa;
+  --sl-color-black: #ffffff;
+
+  --sl-color-bg-nav: #161b22;
+  --sl-color-hairline-shade: #d0d7de;
+  --sl-color-hairline-light: #e3e8ed;
+
+  --sl-color-text: #1f2328;
+  --sl-color-text-accent: #e6edf3;
+  --sl-color-text-invert: #ffffff;
+
+  --cd-bg-page: #ffffff;
+  --cd-bg-header: #161b22;
+  --cd-bg-card: #f6f8fa;
+  --cd-bg-hover: #eaeef2;
+  --cd-text-primary: #1f2328;
+  --cd-text-secondary: #656d76;
+  --cd-text-heading: #1f2328;
+  --cd-text-link: #7c3aed;
+  --cd-text-link-hover: #6d28d9;
+  --cd-border-color: #d0d7de;
+  --cd-border-subtle: #e3e8ed;
+  --cd-accent: #7c3aed;
+  --cd-accent-hover: #6d28d9;
+  --cd-accent-bg: rgba(124, 58, 237, 0.08);
+  --cd-shadow-header: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+/* ===== Base Typography ===== */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+body {
+  font-size: var(--sl-text-base);
+  line-height: var(--sl-line-height);
+}
+
+/* ===== Custom Scrollbar ===== */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--cd-bg-page);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--cd-border-color);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--cd-text-secondary);
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--cd-border-color) var(--cd-bg-page);
+}
+
+/* ===== Header Overrides ===== */
+header.header {
+  background-color: var(--cd-bg-header) !important;
+  box-shadow: var(--cd-shadow-header);
+  height: 48px;
+  border-bottom-color: transparent !important;
+}
+
+header.header starlight-theme-select select {
+  color: #e6edf3;
+  background-color: var(--cd-bg-header);
+}
+
+header.header starlight-theme-select select option {
+  background-color: var(--cd-bg-header);
+  color: #e6edf3;
+}
+
+/* ===== Hide sidebar on splash landing ===== */
+[data-has-sidebar] .sidebar-pane {
+  display: none;
+}
+
+/* ===== Hero Section ===== */
+.hero {
+  padding-bottom: 2rem;
+}
+
+/* ===== Card Grid ===== */
+.sl-link-card {
+  border-color: var(--cd-border-color);
+  border-radius: 8px;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.sl-link-card:hover {
+  border-color: var(--cd-accent);
+  background: var(--cd-accent-bg);
+}
+
+/* ===== Content Typography ===== */
+.sl-markdown-content a {
+  color: var(--cd-text-link);
+  text-decoration: none;
+  transition: color 0.15s;
+}
+.sl-markdown-content a:hover {
+  color: var(--cd-text-link-hover);
+  text-decoration: underline;
+}
+
+.sl-markdown-content strong {
+  font-weight: 600;
+  color: var(--cd-text-heading);
+}
+
+/* ===== Selection Color ===== */
+::selection {
+  background: rgba(167, 139, 250, 0.3);
+  color: inherit;
+}
+
+/* ===== Mobile Menu Button Override ===== */
+starlight-menu-button button {
+  background-color: transparent !important;
+  color: #e6edf3 !important;
+  box-shadow: none !important;
+  border-radius: 4px !important;
+  width: 32px !important;
+  height: 32px !important;
+  padding: 4px !important;
+}
+
+starlight-menu-button button:hover {
+  background-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+:root[data-theme='light'] starlight-menu-button button {
+  background-color: transparent !important;
+  color: #e6edf3 !important;
+}
+
+/* ===== Print Styles ===== */
+@media print {
+  header.header,
+  starlight-menu-button {
+    display: none !important;
+  }
+}
