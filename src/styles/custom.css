@@ -259,18 +259,6 @@ starlight-menu-button button:hover {
   background-color: rgba(255, 255, 255, 0.1) !important;
 }
 
-/* ===== Repo Tag Badge ===== */
-.repo-tag {
-  display: inline-block;
-  padding: 2px 8px;
-  border-radius: 12px;
-  font-size: 0.72rem;
-  font-family: var(--sl-font-mono);
-  background: var(--cd-accent-bg);
-  color: var(--cd-accent);
-  border: 1px solid var(--cd-accent);
-}
-
 /* ===== Recent Updates List ===== */
 .recent-updates {
   max-width: var(--sl-content-width);
