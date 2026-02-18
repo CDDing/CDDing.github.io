@@ -6,7 +6,9 @@ export default defineConfig({
   site: 'https://cdding.github.io',
   base: '/',
   integrations: [
-    sitemap(),
+    sitemap({
+      filter: (page) => !page.includes('googlea35dd1e81f26a54a'),
+    }),
     starlight({
       title: 'CDDing',
       defaultLocale: 'root',

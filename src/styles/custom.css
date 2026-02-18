@@ -66,6 +66,7 @@
   --cd-accent: #a78bfa;
   --cd-accent-hover: #c4b5fd;
   --cd-accent-bg: rgba(167, 139, 250, 0.1);
+  --cd-header-text: #e6edf3;
   --cd-shadow-header: 0 1px 2px rgba(0, 0, 0, 0.4);
 }
 
@@ -106,6 +107,7 @@
   --cd-accent: #7c3aed;
   --cd-accent-hover: #6d28d9;
   --cd-accent-bg: rgba(124, 58, 237, 0.08);
+  --cd-header-text: #e6edf3;
   --cd-shadow-header: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
@@ -151,18 +153,8 @@ header.header {
 }
 
 header.header starlight-theme-select select {
-  color: #e6edf3;
+  color: var(--cd-header-text);
   background-color: var(--cd-bg-header);
-}
-
-header.header starlight-theme-select select option {
-  background-color: var(--cd-bg-header);
-  color: #e6edf3;
-}
-
-/* ===== Hide sidebar on splash landing ===== */
-[data-has-sidebar] .sidebar-pane {
-  display: none;
 }
 
 /* ===== Hero Section ===== */
@@ -207,7 +199,7 @@ header.header starlight-theme-select select option {
 /* ===== Mobile Menu Button Override ===== */
 starlight-menu-button button {
   background-color: transparent !important;
-  color: #e6edf3 !important;
+  color: var(--cd-header-text) !important;
   box-shadow: none !important;
   border-radius: 4px !important;
   width: 32px !important;
@@ -217,11 +209,6 @@ starlight-menu-button button {
 
 starlight-menu-button button:hover {
   background-color: rgba(255, 255, 255, 0.1) !important;
-}
-
-:root[data-theme='light'] starlight-menu-button button {
-  background-color: transparent !important;
-  color: #e6edf3 !important;
 }
 
 /* ===== Print Styles ===== */
