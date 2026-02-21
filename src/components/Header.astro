@@ -30,6 +30,7 @@ const currentPath = Astro.url.pathname;
     <div class="nav-item">
       <a href={`${base}articles/`} class="nav-top" aria-current={currentPath.startsWith(`${base}articles`) ? 'page' : undefined} aria-expanded="false" aria-controls="dd-articles">Articles</a>
       <div class="nav-dropdown" id="dd-articles" role="menu">
+        <a href={`${base}articles/gpu-hw-sw/01-introduction/`} role="menuitem">GPU Hardware &amp; Software</a>
         <a href={`${base}articles/graphics-pipeline/`} role="menuitem">A Trip Through the Graphics Pipeline</a>
       </div>
     </div>

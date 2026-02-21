@@ -10,6 +10,13 @@ export interface Update {
 
 export const updates: Update[] = [
   {
+    title: 'Introduction of GPU (GPU 소개) 정리',
+    href: '/articles/gpu-hw-sw/01-introduction/',
+    category: 'articles',
+    source: 'Article',
+    date: '2026-02-22',
+  },
+  {
     title: 'Image Operations (이미지 연산) 정리',
     href: 'https://cdding.github.io/vk_spec_ko/spec/10_images/',
     category: 'vulkan',
