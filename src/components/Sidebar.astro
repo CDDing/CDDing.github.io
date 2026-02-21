@@ -1,14 +1,13 @@
 ---
 /**
  * 경로 기반 사이드바 필터링
- * - /vulkan/* → "Vulkan" 그룹만
- * - /cuda/*   → "CUDA" 그룹만
- * - /articles/* → "Articles" 그룹만
- * - /log/*    → "학습 로그" 그룹만
- * - /        → 사이드바 없음 (splash)
+ * Starlight 기본 Sidebar를 오버라이드하여 현재 섹션만 표시
  */
-import Default from '@astrojs/starlight/components/Sidebar.astro';
+import MobileMenuFooter from 'virtual:starlight/components/MobileMenuFooter';
+import SidebarPersister from '@astrojs/starlight/components/SidebarPersister.astro';
+import SidebarSublist from '@astrojs/starlight/components/SidebarSublist.astro';
 
+const { sidebar } = Astro.locals.starlightRoute;
 const pathname = Astro.url.pathname;
 
 const sectionMap: Record<string, string> = {
@@ -18,7 +17,6 @@ const sectionMap: Record<string, string> = {
   '/log/': '학습 로그',
 };
 
-// 현재 경로에 맞는 섹션 라벨 찾기
 let sectionLabel: string | null = null;
 for (const [prefix, label] of Object.entries(sectionMap)) {
   if (pathname.startsWith(prefix)) {
@@ -27,13 +25,15 @@ for (const [prefix, label] of Object.entries(sectionMap)) {
   }
 }
 
-// 해당 섹션 그룹만 필터링 + 자동 펼침
-const sidebar = Astro.props.sidebar ?? [];
 const filteredSidebar = sectionLabel
-  ? sidebar
-      .filter((entry: any) => entry.type === 'group' && entry.label === sectionLabel)
-      .map((entry: any) => ({ ...entry, collapsed: false }))
+  ? sidebar.filter((entry: any) => entry.label === sectionLabel)
   : sidebar;
 ---
 
-<Default {...Astro.props} sidebar={filteredSidebar} />
+<SidebarPersister>
+	<SidebarSublist sublist={filteredSidebar} />
+</SidebarPersister>
+
+<div class="md:sl-hidden">
+	<MobileMenuFooter />
+</div>
