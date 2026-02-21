@@ -12,7 +12,7 @@ Vulkan을 사용하기 전에 반드시 해야 할 두 가지: **커맨드 함�
 
 ## 1. Command Function Pointers (함수 포인터 로딩)
 
-Vulkan 커맨드는 **정적 링킹으로 반드시 제공되지 않는다.** <sup class="fn-ref"><a href="/vk_spec_ko/log/01_initialization/#pfn-접두사의-의미">[1]</a><span class="fn-tooltip"><span class="fn-title"><a href="/vk_spec_ko/log/01_initialization/#pfn-접두사의-의미">PFN 접두사의 의미</a></span><span class="fn-desc">PFN = Pointer to FunctioN. C에서 함수 포인터 타입을 typedef로 정의할 때 쓰는 네이밍 컨벤션.</span></span></sup> 플랫폼에 따라 동적으로 로딩해야 할 수 있다.
+Vulkan 커맨드는 **정적 링킹으로 반드시 제공되지 않는다.** <sup class="fn-ref"><a href="/log/vulkan/01_initialization/#pfn-접두사의-의미">[1]</a><span class="fn-tooltip"><span class="fn-title"><a href="/log/vulkan/01_initialization/#pfn-접두사의-의미">PFN 접두사의 의미</a></span><span class="fn-desc">PFN = Pointer to FunctioN. C에서 함수 포인터 타입을 typedef로 정의할 때 쓰는 네이밍 컨벤션.</span></span></sup> 플랫폼에 따라 동적으로 로딩해야 할 수 있다.
 
 ### 1.1 vkGetInstanceProcAddr — 핵심 진입점
 
@@ -50,7 +50,7 @@ PFN_vkVoidFunction vkGetDeviceProcAddr(
     const char* pName);
 ```
 
-`vkGetInstanceProcAddr`로 얻은 함수 포인터는 **디스패치 코드를 거칠 수 있음** <sup class="fn-ref"><a href="/vk_spec_ko/log/01_initialization/#디스패치dispatch란">[2]</a><span class="fn-tooltip"><span class="fn-title"><a href="/vk_spec_ko/log/01_initialization/#디스패치dispatch란">디스패치(Dispatch)란?</a></span><span class="fn-desc">어디로 보낼지 판단해서 라우팅하는 것. Instance 레벨 함수 포인터는 디스패치 코드를 거치고, Device 레벨은 직통.</span></span></sup> (여러 GPU가 있을 때 어떤 디바이스로 보낼지 판단하는 레이어). `vkGetDeviceProcAddr`로 얻으면 이 오버헤드를 제거할 수 있다.
+`vkGetInstanceProcAddr`로 얻은 함수 포인터는 **디스패치 코드를 거칠 수 있음** <sup class="fn-ref"><a href="/log/vulkan/01_initialization/#디스패치dispatch란">[2]</a><span class="fn-tooltip"><span class="fn-title"><a href="/log/vulkan/01_initialization/#디스패치dispatch란">디스패치(Dispatch)란?</a></span><span class="fn-desc">어디로 보낼지 판단해서 라우팅하는 것. Instance 레벨 함수 포인터는 디스패치 코드를 거치고, Device 레벨은 직통.</span></span></sup> (여러 GPU가 있을 때 어떤 디바이스로 보낼지 판단하는 레이어). `vkGetDeviceProcAddr`로 얻으면 이 오버헤드를 제거할 수 있다.
 
 > **실무 팁**: 성능이 중요한 커맨드(vkCmdDraw 등)는 `vkGetDeviceProcAddr`로 직접 함수 포인터를 얻어서 호출하면 약간의 성능 이점이 있음.
 
@@ -111,7 +111,7 @@ typedef struct VkInstanceCreateInfo {
 } VkInstanceCreateInfo;
 ```
 
-**레이어 로딩 순서**: 배열의 첫 번째가 앱에 가장 가깝고, 마지막이 드라이버에 가장 가까움. <sup class="fn-ref"><a href="/vk_spec_ko/log/01_initialization/#레이어-배열-순서">[3]</a><span class="fn-tooltip"><span class="fn-title"><a href="/vk_spec_ko/log/01_initialization/#레이어-배열-순서">레이어 배열 순서</a></span><span class="fn-desc">배열 첫 번째가 앱에 가장 가깝고, 마지막이 드라이버에 가장 가까움. 순서에 따라 호출 체인 위치가 달라진다.</span></span></sup>
+**레이어 로딩 순서**: 배열의 첫 번째가 앱에 가장 가깝고, 마지막이 드라이버에 가장 가까움. <sup class="fn-ref"><a href="/log/vulkan/01_initialization/#레이어-배열-순서">[3]</a><span class="fn-tooltip"><span class="fn-title"><a href="/log/vulkan/01_initialization/#레이어-배열-순서">레이어 배열 순서</a></span><span class="fn-desc">배열 첫 번째가 앱에 가장 가깝고, 마지막이 드라이버에 가장 가까움. 순서에 따라 호출 체인 위치가 달라진다.</span></span></sup>
 
 **pNext 체인으로 연결 가능한 것들:**
 - `VkDebugUtilsMessengerCreateInfoEXT` — 인스턴스 생성/파괴 중 디버그 메시지 캡처
@@ -143,7 +143,7 @@ typedef struct VkApplicationInfo {
 > **왜 앱/엔진 이름을 넣나?**
 > 드라이버가 특정 앱이나 엔진(예: Unreal Engine)에 대해 알려진 워크어라운드나 최적화를 적용할 수 있도록. 기술적으로 선택사항이지만 넣는 게 좋음.
 
-### 2.6 인스턴스 파괴 — vkDestroyInstance <sup class="fn-ref"><a href="/vk_spec_ko/log/00_fundamentals/#pallocator는-cpu-측-메모리다">[4]</a><span class="fn-tooltip"><span class="fn-title"><a href="/vk_spec_ko/log/00_fundamentals/#pallocator는-cpu-측-메모리다">pAllocator는 CPU 측 메모리다</a></span><span class="fn-desc">pAllocator는 GPU 메모리가 아닌 CPU 메모리 할당을 커스터마이징하는 것. 드라이버 내부 메타데이터 할당에 관여.</span></span></sup>
+### 2.6 인스턴스 파괴 — vkDestroyInstance <sup class="fn-ref"><a href="/log/vulkan/00_fundamentals/#pallocator는-cpu-측-메모리다">[4]</a><span class="fn-tooltip"><span class="fn-title"><a href="/log/vulkan/00_fundamentals/#pallocator는-cpu-측-메모리다">pAllocator는 CPU 측 메모리다</a></span><span class="fn-desc">pAllocator는 GPU 메모리가 아닌 CPU 메모리 할당을 커스터마이징하는 것. 드라이버 내부 메타데이터 할당에 관여.</span></span></sup>
 
 ```c
 void vkDestroyInstance(
@@ -208,7 +208,7 @@ void vkDestroyInstance(
 
 ## 초기화 플로우 요약
 
-<img src="/vk_spec_ko/images/01_initialization/loader_overview.png" alt="Vulkan 로더 아키텍처" class="light-bg" />
+<img src="/images/01_initialization/loader_overview.png" alt="Vulkan 로더 아키텍처" class="light-bg" />
 
 > 출처: [Vulkan Guide — Loader](https://docs.vulkan.org/guide/latest/loader.html). 앱 → 로더 → 레이어 → ICD → 물리 디바이스로 이어지는 전체 구조.
 

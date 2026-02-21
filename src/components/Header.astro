@@ -1,5 +1,6 @@
 ---
 import ThemeSelect from 'virtual:starlight/components/ThemeSelect';
+import Search from 'virtual:starlight/components/Search';
 
 const base = import.meta.env.BASE_URL;
 const currentPath = Astro.url.pathname;
@@ -35,6 +36,9 @@ const currentPath = Astro.url.pathname;
       </div>
     </div>
   </nav>
+  <div class="search-wrapper sl-flex print:hidden">
+    <Search />
+  </div>
   <div class="sl-hidden md:sl-flex print:hidden right-group">
     <ThemeSelect />
     <a href="https://github.com/CDDing" rel="me" class="sl-flex github-link" aria-label="GitHub">

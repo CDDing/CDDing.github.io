@@ -31,7 +31,7 @@ Vulkan은 이런 순서를 **자동으로 보장하지 않는다**. 앱이 명�
 | **Pipeline Barrier** | 커맨드 버퍼 내 파이프라인 스테이지 간 동기화 | 스테이지 단위 |
 | **Render Pass** | 서브패스 간 어태치먼트 의존성 | 서브패스 단위 |
 
-<img src="/vk_spec_ko/images/04_synchronization/synchronization_overview.png" alt="동기화 프리미티브 개요" class="light-bg" />
+<img src="/images/04_synchronization/synchronization_overview.png" alt="동기화 프리미티브 개요" class="light-bg" />
 
 > 출처: [Vulkan Guide — Synchronization](https://docs.vulkan.org/guide/latest/synchronization.html). Event는 커맨드 버퍼 내부, Semaphore는 큐 간, Fence는 GPU↔CPU 간 동기화를 담당한다.
 
@@ -131,7 +131,7 @@ B가 올바른 값 읽기
 
 동기화에서 "어디까지 기다리고, 어디부터 시작할지"를 **파이프라인 스테이지**로 지정한다.
 
-<img src="/vk_spec_ko/images/04_synchronization/synchronization_pipeline_barriers.png" alt="파이프라인 배리어 동작" class="light-bg" />
+<img src="/images/04_synchronization/synchronization_pipeline_barriers.png" alt="파이프라인 배리어 동작" class="light-bg" />
 
 > 출처: [Vulkan Guide — Synchronization](https://docs.vulkan.org/guide/latest/synchronization.html). Shadow 렌더 패스의 프래그먼트 테스트 이후 → Main 렌더 패스의 프래그먼트 셰이더 시작 전으로 배리어를 설정한 예시.
 

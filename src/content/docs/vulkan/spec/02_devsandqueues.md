@@ -19,7 +19,7 @@ Vulkan이 초기화되면(VkInstance 생성 후), **디바이스**와 **큐**가
 VK_DEFINE_HANDLE(VkPhysicalDevice)
 ```
 
-VkPhysicalDevice는 VkInstance로부터 열거되는 **디스패처블 핸들**<sup class="fn-ref"><a href="/vk_spec_ko/log/02_devsandqueues/#디스패처블-핸들dispatchable-handle이란">[1]</a><span class="fn-tooltip"><span class="fn-title"><a href="/vk_spec_ko/log/02_devsandqueues/#디스패처블-핸들dispatchable-handle이란">디스패처블 핸들이란?</a></span><span class="fn-desc">Dispatchable 핸들은 내부에 dispatch table(함수 포인터 테이블)을 가진다. VkInstance, VkPhysicalDevice, VkDevice, VkQueue, VkCommandBuffer만 해당.</span></span></sup><sup class="fn-ref"><a href="/vk_spec_ko/log/02_devsandqueues/#dispatch-어원--vkcmddispatch와-dispatch-table의-관계">[2]</a><span class="fn-tooltip"><span class="fn-title"><a href="/vk_spec_ko/log/02_devsandqueues/#dispatch-어원--vkcmddispatch와-dispatch-table의-관계">dispatch 어원</a></span><span class="fn-desc">dispatch = '적절한 곳으로 보내다'. Dispatch table은 API 호출을 올바른 드라이버로 라우팅, vkCmdDispatch는 컴퓨트 워크를 GPU로 발송.</span></span></sup>이다. 인스턴스가 파괴되면 함께 무효화된다.
+VkPhysicalDevice는 VkInstance로부터 열거되는 **디스패처블 핸들**<sup class="fn-ref"><a href="/log/vulkan/02_devsandqueues/#디스패처블-핸들dispatchable-handle이란">[1]</a><span class="fn-tooltip"><span class="fn-title"><a href="/log/vulkan/02_devsandqueues/#디스패처블-핸들dispatchable-handle이란">디스패처블 핸들이란?</a></span><span class="fn-desc">Dispatchable 핸들은 내부에 dispatch table(함수 포인터 테이블)을 가진다. VkInstance, VkPhysicalDevice, VkDevice, VkQueue, VkCommandBuffer만 해당.</span></span></sup><sup class="fn-ref"><a href="/log/vulkan/02_devsandqueues/#dispatch-어원--vkcmddispatch와-dispatch-table의-관계">[2]</a><span class="fn-tooltip"><span class="fn-title"><a href="/log/vulkan/02_devsandqueues/#dispatch-어원--vkcmddispatch와-dispatch-table의-관계">dispatch 어원</a></span><span class="fn-desc">dispatch = '적절한 곳으로 보내다'. Dispatch table은 API 호출을 올바른 드라이버로 라우팅, vkCmdDispatch는 컴퓨트 워크를 GPU로 발송.</span></span></sup>이다. 인스턴스가 파괴되면 함께 무효화된다.
 
 ### 1.1 물리 디바이스 열거 — vkEnumeratePhysicalDevices
 
@@ -166,7 +166,7 @@ typedef struct VkPhysicalDeviceSparseProperties {
 } VkPhysicalDeviceSparseProperties;
 ```
 
-`VkBool32`<sup class="fn-ref"><a href="/vk_spec_ko/log/02_devsandqueues/#vkbool32는-왜-32비트인가">[3]</a><span class="fn-tooltip"><span class="fn-title"><a href="/vk_spec_ko/log/02_devsandqueues/#vkbool32는-왜-32비트인가">VkBool32는 왜 32비트인가?</a></span><span class="fn-desc">C의 bool 크기가 컴파일러마다 달라서 ABI 호환성을 위해 uint32_t로 고정. 구조체 정렬 때문에 어차피 4바이트를 차지한다.</span></span></sup> 희소 리소스는 메모리를 부분적으로 바인딩할 수 있는 기능이다. 이 속성들은 희소 이미지의 타일 레이아웃과 비상주 접근 동작을 정의한다.
+`VkBool32`<sup class="fn-ref"><a href="/log/vulkan/02_devsandqueues/#vkbool32는-왜-32비트인가">[3]</a><span class="fn-tooltip"><span class="fn-title"><a href="/log/vulkan/02_devsandqueues/#vkbool32는-왜-32비트인가">VkBool32는 왜 32비트인가?</a></span><span class="fn-desc">C의 bool 크기가 컴파일러마다 달라서 ABI 호환성을 위해 uint32_t로 고정. 구조체 정렬 때문에 어차피 4바이트를 차지한다.</span></span></sup> 희소 리소스는 메모리를 부분적으로 바인딩할 수 있는 기능이다. 이 속성들은 희소 이미지의 타일 레이아웃과 비상주 접근 동작을 정의한다.
 
 ### 1.6 물리 디바이스 기능 — vkGetPhysicalDeviceFeatures
 
@@ -274,7 +274,7 @@ Vulkan 1.1~1.4에서 추가된 주요 속성 구조체들 (vkGetPhysicalDevicePr
 
 ---
 
-## 2. Devices (논리 디바이스) <sup class="fn-ref"><a href="/vk_spec_ko/log/02_devsandqueues/#물리-디바이스와-논리-디바이스를-왜-분리했나">[4]</a><span class="fn-tooltip"><span class="fn-title"><a href="/vk_spec_ko/log/02_devsandqueues/#물리-디바이스와-논리-디바이스를-왜-분리했나">물리/논리 디바이스를 왜 분리했나?</a></span><span class="fn-desc">조회(read-only)와 사용(mutable)의 분리. 물리 디바이스로 능력을 확인하고, 논리 디바이스에서 필요한 것만 켜서 사용하는 2단계 설계.</span></span></sup>
+## 2. Devices (논리 디바이스) <sup class="fn-ref"><a href="/log/vulkan/02_devsandqueues/#물리-디바이스와-논리-디바이스를-왜-분리했나">[4]</a><span class="fn-tooltip"><span class="fn-title"><a href="/log/vulkan/02_devsandqueues/#물리-디바이스와-논리-디바이스를-왜-분리했나">물리/논리 디바이스를 왜 분리했나?</a></span><span class="fn-desc">조회(read-only)와 사용(mutable)의 분리. 물리 디바이스로 능력을 확인하고, 논리 디바이스에서 필요한 것만 켜서 사용하는 2단계 설계.</span></span></sup>
 
 논리 디바이스(VkDevice)는 물리 디바이스의 **논리적 표현**이다. 앱은 논리 디바이스를 통해 GPU 리소스를 사용한다. 하나의 물리 디바이스에서 **여러 논리 디바이스**를 생성할 수 있다.
 
@@ -484,7 +484,7 @@ typedef enum VkQueueFlagBits {
 
 #### 일반적인 큐 패밀리 구성 예시
 
-<img src="/vk_spec_ko/images/02_devsandqueues/queues_hypothetical.png" alt="큐 패밀리 구조" class="light-bg" />
+<img src="/images/02_devsandqueues/queues_hypothetical.png" alt="큐 패밀리 구조" class="light-bg" />
 
 > 출처: [Vulkan Guide — Queues](https://docs.vulkan.org/guide/latest/queues.html). 2개의 큐 패밀리에 각각 다른 능력과 큐 수를 가진 가상의 구현 예시.
 
@@ -510,7 +510,7 @@ typedef struct VkDeviceQueueCreateInfo {
 } VkDeviceQueueCreateInfo;
 ```
 
-**큐 우선순위 규칙:** <sup class="fn-ref"><a href="/vk_spec_ko/log/02_devsandqueues/#큐-우선순위는-os-프로세스-우선순위와-비슷한가">[5]</a><span class="fn-tooltip"><span class="fn-title"><a href="/vk_spec_ko/log/02_devsandqueues/#큐-우선순위는-os-프로세스-우선순위와-비슷한가">큐 우선순위는 OS 프로세스 우선순위와 비슷한가?</a></span><span class="fn-desc">비슷하지만 GPU는 보통 실행 중인 워크를 선점하지 않는다는 핵심 차이. 실무에서는 대부분 1.0으로 통일.</span></span></sup>
+**큐 우선순위 규칙:** <sup class="fn-ref"><a href="/log/vulkan/02_devsandqueues/#큐-우선순위는-os-프로세스-우선순위와-비슷한가">[5]</a><span class="fn-tooltip"><span class="fn-title"><a href="/log/vulkan/02_devsandqueues/#큐-우선순위는-os-프로세스-우선순위와-비슷한가">큐 우선순위는 OS 프로세스 우선순위와 비슷한가?</a></span><span class="fn-desc">비슷하지만 GPU는 보통 실행 중인 워크를 선점하지 않는다는 핵심 차이. 실무에서는 대부분 1.0으로 통일.</span></span></sup>
 
 - 각 큐에 `0.0`(최저) ~ `1.0`(최고) 범위의 우선순위를 지정한다
 - `pQueuePriorities` 배열의 크기는 `queueCount`와 같아야 한다

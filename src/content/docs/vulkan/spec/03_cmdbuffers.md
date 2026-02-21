@@ -27,7 +27,7 @@ sidebar:
 
 ### 상태 전이 다이어그램
 
-<img src="/vk_spec_ko/images/03_cmdbuffers/commandbuffer_lifecycle.svg" alt="Command Buffer Lifecycle" class="light-bg" />
+<img src="/images/03_cmdbuffers/commandbuffer_lifecycle.svg" alt="Command Buffer Lifecycle" class="light-bg" />
 
 > **vkAllocateCommandBuffers** → Initial 상태로 생성, **vkFreeCommandBuffers** → 어떤 상태에서든 해제 가능 (Pending 제외)
 

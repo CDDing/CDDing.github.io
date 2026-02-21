@@ -28,7 +28,7 @@ Vulkan 구현체가 호스트(CPU 측)에 요구하는 사항:
 ### 2.1 디바이스와 큐
 
 - Vulkan은 하나 이상의 **디바이스(Device)** 를 노출함
-- 각 디바이스는 하나 이상의 **큐(Queue)** 를 가짐 → 비동기 처리 가능 <sup class="fn-ref"><a href="/vk_spec_ko/log/00_fundamentals/#큐가-왜-나뉘어져-있는가">[1]</a><span class="fn-tooltip"><span class="fn-title"><a href="/vk_spec_ko/log/00_fundamentals/#큐가-왜-나뉘어져-있는가">큐가 왜 나뉘어져 있는가</a></span><span class="fn-desc">GPU 내부에 물리적으로 다른 엔진(Graphics, Compute, DMA, Video)이 존재하기 때문. 분리하면 동시 실행, 오버헤드 제거, 드라이버 최적화 이점.</span></span></sup>
+- 각 디바이스는 하나 이상의 **큐(Queue)** 를 가짐 → 비동기 처리 가능 <sup class="fn-ref"><a href="/log/vulkan/00_fundamentals/#큐가-왜-나뉘어져-있는가">[1]</a><span class="fn-tooltip"><span class="fn-title"><a href="/log/vulkan/00_fundamentals/#큐가-왜-나뉘어져-있는가">큐가 왜 나뉘어져 있는가</a></span><span class="fn-desc">GPU 내부에 물리적으로 다른 엔진(Graphics, Compute, DMA, Video)이 존재하기 때문. 분리하면 동시 실행, 오버헤드 제거, 드라이버 최적화 이점.</span></span></sup>
 - 큐는 **큐 패밀리(Queue Family)** 로 분류됨
   - 같은 패밀리 내의 큐는 **호환 가능** (어떤 큐에서든 실행 가능)
 - 큐가 지원하는 기능 종류:
@@ -42,7 +42,7 @@ Vulkan 구현체가 호스트(CPU 측)에 요구하는 사항:
 ### 2.2 디바이스 메모리
 
 - 애플리케이션이 **명시적으로 관리**해야 함 (OpenGL과 다른 핵심 차이점!)
-- 하나 이상의 **힙(Heap)** 으로 광고됨 <sup class="fn-ref"><a href="/vk_spec_ko/log/00_fundamentals/#vulkan-힙-vs-cs에서의-힙">[2]</a><span class="fn-tooltip"><span class="fn-title"><a href="/vk_spec_ko/log/00_fundamentals/#vulkan-힙-vs-cs에서의-힙">Vulkan 힙 vs CS에서의 힙</a></span><span class="fn-desc">유래는 같다. 둘 다 '큰 메모리 풀에서 원하는 만큼 떼어 쓴다'는 개념. 차이는 Vulkan 힙이 물리적으로 다른 여러 메모리 영역을 구분해서 노출한다는 점.</span></span></sup>
+- 하나 이상의 **힙(Heap)** 으로 광고됨 <sup class="fn-ref"><a href="/log/vulkan/00_fundamentals/#vulkan-힙-vs-cs에서의-힙">[2]</a><span class="fn-tooltip"><span class="fn-title"><a href="/log/vulkan/00_fundamentals/#vulkan-힙-vs-cs에서의-힙">Vulkan 힙 vs CS에서의 힙</a></span><span class="fn-desc">유래는 같다. 둘 다 '큰 메모리 풀에서 원하는 만큼 떼어 쓴다'는 개념. 차이는 Vulkan 힙이 물리적으로 다른 여러 메모리 영역을 구분해서 노출한다는 점.</span></span></sup>
 - 메모리 종류 예시:
   - **Device-local**: GPU에 물리적으로 연결된 메모리 (가장 빠름)
   - **Device-local, Host visible**: GPU 메모리인데 CPU에서도 접근 가능
@@ -53,7 +53,7 @@ Vulkan 구현체가 호스트(CPU 측)에 요구하는 사항:
 
 **제출(Submission):**
 - `vkQueueSubmit` 등의 명령으로 작업을 큐에 제출
-- 제출 후 **즉시 반환** — 작업 완료를 기다리지 않음! <sup class="fn-ref"><a href="/vk_spec_ko/log/00_fundamentals/#제출-후-즉시-반환-fire-and-forget">[3]</a><span class="fn-tooltip"><span class="fn-title"><a href="/vk_spec_ko/log/00_fundamentals/#제출-후-즉시-반환-fire-and-forget">제출 후 즉시 반환 (Fire-and-Forget)</a></span><span class="fn-desc">vkQueueSubmit은 GPU에 작업을 던지고 바로 반환. CPU는 다른 일을 하다가 결과가 필요한 시점에 vkWaitForFences로 대기.</span></span></sup>
+- 제출 후 **즉시 반환** — 작업 완료를 기다리지 않음! <sup class="fn-ref"><a href="/log/vulkan/00_fundamentals/#제출-후-즉시-반환-fire-and-forget">[3]</a><span class="fn-tooltip"><span class="fn-title"><a href="/log/vulkan/00_fundamentals/#제출-후-즉시-반환-fire-and-forget">제출 후 즉시 반환 (Fire-and-Forget)</a></span><span class="fn-desc">vkQueueSubmit은 GPU에 작업을 던지고 바로 반환. CPU는 다른 일을 하다가 결과가 필요한 시점에 vkWaitForFences로 대기.</span></span></sup>
 
 **순서 보장:**
 - 서로 다른 큐 간에는 **암묵적 순서 보장 없음**
@@ -100,7 +100,7 @@ Vulkan의 모든 엔티티는 **핸들(Handle)** 로 참조됨. 두 가지 종�
 | 패턴 | 생성 | 파괴 | 특징 |
 |------|------|------|------|
 | Create/Destroy | `vkCreate*` | `vkDestroy*` | 일반 오브젝트 |
-| Allocate/Free | `vkAllocate*` | `vkFree*` | 풀에서 할당. 고빈도 할당/해제에 적합 <sup class="fn-ref"><a href="/vk_spec_ko/log/00_fundamentals/#vkallocate-패턴">[4]</a><span class="fn-tooltip"><span class="fn-title"><a href="/vk_spec_ko/log/00_fundamentals/#vkallocate-패턴">vkAllocate* 패턴</a></span><span class="fn-desc">vkAllocateMemory, vkAllocateCommandBuffers, vkAllocateDescriptorSets 딱 3개. 풀/힙에서 떼어오는 구조라 Allocate/Free 패턴.</span></span></sup> |
+| Allocate/Free | `vkAllocate*` | `vkFree*` | 풀에서 할당. 고빈도 할당/해제에 적합 <sup class="fn-ref"><a href="/log/vulkan/00_fundamentals/#vkallocate-패턴">[4]</a><span class="fn-tooltip"><span class="fn-title"><a href="/log/vulkan/00_fundamentals/#vkallocate-패턴">vkAllocate* 패턴</a></span><span class="fn-desc">vkAllocateMemory, vkAllocateCommandBuffers, vkAllocateDescriptorSets 딱 3개. 풀/힙에서 떼어오는 구조라 Allocate/Free 패턴.</span></span></sup> |
 
 **핵심 규칙:**
 - 오브젝트의 "구조"는 생성 후 **불변(immutable)** — 콘텐츠는 변경 가능
