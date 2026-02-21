@@ -16,16 +16,19 @@ const currentPath = Astro.url.pathname;
   </div>
   <nav class="header-nav sl-flex">
     <div class="nav-item">
-      <a href={`${base}vulkan/`} class="nav-top" aria-current={currentPath.startsWith('/vulkan') ? 'page' : undefined} aria-expanded="false" aria-controls="dd-vulkan">Vulkan</a>
+      <a href={`${base}vulkan/`} class="nav-top" aria-current={currentPath.startsWith(`${base}vulkan`) ? 'page' : undefined} aria-expanded="false" aria-controls="dd-vulkan">Vulkan</a>
       <div class="nav-dropdown" id="dd-vulkan" role="menu">
         <a href={`${base}vulkan/`} role="menuitem">Vulkan Spec</a>
       </div>
     </div>
     <div class="nav-item">
-      <a href={`${base}cuda/`} class="nav-top" aria-current={currentPath.startsWith('/cuda') ? 'page' : undefined} aria-expanded="false" aria-controls="dd-cuda">CUDA</a>
+      <a href={`${base}cuda/`} class="nav-top" aria-current={currentPath.startsWith(`${base}cuda`) ? 'page' : undefined} aria-expanded="false" aria-controls="dd-cuda">CUDA</a>
       <div class="nav-dropdown" id="dd-cuda" role="menu">
         <a href={`${base}cuda/`} role="menuitem">CUDA Guide</a>
       </div>
+    </div>
+    <div class="nav-item">
+      <a href={`${base}articles/`} class="nav-top" aria-current={currentPath.startsWith(`${base}articles`) ? 'page' : undefined}>Articles</a>
     </div>
   </nav>
   <div class="sl-hidden md:sl-flex print:hidden right-group">
@@ -49,7 +52,7 @@ const currentPath = Astro.url.pathname;
       if (!window.matchMedia('(hover: none)').matches) return;
       const open = top.getAttribute('aria-expanded') === 'true';
       // Close all others
-      document.querySelectorAll('.nav-item .nav-top').forEach((t) => t.setAttribute('aria-expanded', 'false'));
+      document.querySelectorAll('.nav-item .nav-top[aria-expanded]').forEach((t) => t.setAttribute('aria-expanded', 'false'));
       if (!open) {
         e.preventDefault();
         top.setAttribute('aria-expanded', 'true');
@@ -64,7 +67,7 @@ const currentPath = Astro.url.pathname;
   // Close dropdowns on outside click
   document.addEventListener('click', (e) => {
     if (!(e.target as HTMLElement).closest('.nav-item')) {
-      document.querySelectorAll('.nav-item .nav-top').forEach((t) => t.setAttribute('aria-expanded', 'false'));
+      document.querySelectorAll('.nav-item .nav-top[aria-expanded]').forEach((t) => t.setAttribute('aria-expanded', 'false'));
     }
   });
 </script>

@@ -316,6 +316,12 @@ starlight-menu-button button:hover {
   border: 1px solid rgba(34, 197, 94, 0.3);
 }
 
+.badge-articles {
+  background: rgba(96, 165, 250, 0.1);
+  color: #60a5fa;
+  border: 1px solid rgba(96, 165, 250, 0.3);
+}
+
 :root[data-theme='light'] .badge-vulkan {
   background: rgba(220, 38, 38, 0.08);
   color: #dc2626;
@@ -326,6 +332,12 @@ starlight-menu-button button:hover {
   background: rgba(22, 163, 74, 0.08);
   color: #16a34a;
   border: 1px solid rgba(22, 163, 74, 0.2);
+}
+
+:root[data-theme='light'] .badge-articles {
+  background: rgba(37, 99, 235, 0.08);
+  color: #2563eb;
+  border: 1px solid rgba(37, 99, 235, 0.2);
 }
 
 .update-link {
