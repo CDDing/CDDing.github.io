@@ -1,8 +1,29 @@
 ---
-title: CUDA
-description: CUDA 프로그래밍 관련 한글 정리 프로젝트 모음
+title: "CUDA 가이드 한글 해설"
+template: splash
+hero:
+  title: CUDA 가이드 한글 해설
+  tagline: NVIDIA CUDA 관련 문서를 한글로 요약·해설한 프로젝트입니다.
+  actions:
+    - text: 가이드 읽기
+      link: /cuda/programming/01_introduction/
+      icon: right-arrow
+    - text: GitHub
+      link: https://github.com/CDDing
+      icon: external
+      variant: minimal
 ---
 
-import RecentUpdates from '../../../../src/components/RecentUpdates.astro';
+import { Card, CardGrid, LinkCard } from '@astrojs/starlight/components';
 
-<RecentUpdates category="cuda" />
+## Programming Guide
+
+<CardGrid>
+  <LinkCard title="01. Introduction" href="/cuda/programming/01_introduction/" description="GPU 소개, CUDA 등장 배경, 확장 가능한 병렬 프로그래밍" />
+  <LinkCard title="02. Programming Model" href="/cuda/programming/02_programming_model/" description="이기종 시스템, 커널, 스레드 계층, 메모리 모델" />
+</CardGrid>
+
+## 원본 문서
+
+- [CUDA Programming Guide](https://docs.nvidia.com/cuda/cuda-programming-guide/index.html)
+- [CUDA Toolkit Documentation](https://docs.nvidia.com/cuda/)

@@ -1,0 +1,24 @@
+---
+title: "학습 로그"
+template: splash
+hero:
+  title: 학습 로그
+  tagline: 명세와 가이드를 읽으며 나온 질문과 답변을 정리한 개인 학습 기록입니다.
+---
+
+import { Card, CardGrid, LinkCard } from '@astrojs/starlight/components';
+
+## Vulkan
+
+<CardGrid>
+  <LinkCard title="00. Fundamentals" href="/log/vulkan/00_fundamentals/" description="큐 패밀리, 메모리 힙, pAllocator, Fire-and-Forget" />
+  <LinkCard title="01. Initialization" href="/log/vulkan/01_initialization/" description="PFN, 디스패치, 레이어 순서, C API 스타일" />
+  <LinkCard title="02. Devices and Queues" href="/log/vulkan/02_devsandqueues/" description="디스패처블 핸들, dispatch 어원, VkBool32" />
+  <LinkCard title="04. Synchronization" href="/log/vulkan/04_synchronization/" description="(학습 중)" />
+</CardGrid>
+
+## misc
+
+<CardGrid>
+  <LinkCard title="GPU 아키텍처" href="/log/misc/gpu_architecture/" description="GPU 내부 구조, NPU vs Tensor Core, UE 드로우콜" />
+</CardGrid>

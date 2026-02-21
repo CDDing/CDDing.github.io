@@ -1,8 +1,44 @@
 ---
-title: Vulkan
-description: Vulkan API 관련 한글 해설 프로젝트 모음
+title: "Vulkan 명세 한글 해설"
+template: splash
+hero:
+  title: Vulkan 명세 한글 해설
+  tagline: Vulkan 명세를 직접 읽으며 해설한 한글 문서입니다.
+  actions:
+    - text: 명세 요약 읽기
+      link: /vulkan/spec/00_fundamentals/
+      icon: right-arrow
+    - text: GitHub
+      link: https://github.com/CDDing
+      icon: external
+      variant: minimal
 ---
 
-import RecentUpdates from '../../../../src/components/RecentUpdates.astro';
+import { Card, CardGrid, LinkCard } from '@astrojs/starlight/components';
 
-<RecentUpdates category="vulkan" />
+## 명세 요약
+
+<CardGrid>
+  <LinkCard title="00. Fundamentals" href="/vulkan/spec/00_fundamentals/" description="기초 — 호스트/디바이스, 실행 모델, 객체 모델, 스레딩" />
+  <LinkCard title="01. Initialization" href="/vulkan/spec/01_initialization/" description="초기화 — 인스턴스, 로더, 레이어, 확장" />
+  <LinkCard title="02. Devices and Queues" href="/vulkan/spec/02_devsandqueues/" description="디바이스와 큐 — 물리/논리 디바이스, 큐 패밀리" />
+  <LinkCard title="03. Command Buffers" href="/vulkan/spec/03_cmdbuffers/" description="커맨드 버퍼 — 생명주기, 기록, 제출" />
+  <LinkCard title="04. Synchronization" href="/vulkan/spec/04_synchronization/" description="동기화 — 펜스, 세마포어, 배리어, 이벤트" />
+  <LinkCard title="06. Shaders" href="/vulkan/spec/06_shaders/" description="셰이더 — SPIR-V, 셰이더 모듈" />
+  <LinkCard title="07. Pipelines" href="/vulkan/spec/07_pipelines/" description="파이프라인 — 그래픽스/컴퓨트 파이프라인, 레이아웃" />
+  <LinkCard title="08. Memory Allocation" href="/vulkan/spec/08_memory/" description="메모리 할당 — 힙, 메모리 타입, 매핑" />
+  <LinkCard title="09. Resource Creation" href="/vulkan/spec/09_resources/" description="리소스 생성 — 버퍼, 이미지, 뷰" />
+  <LinkCard title="10. Image Operations" href="/vulkan/spec/10_images/" description="이미지 연산 — 레이아웃 전환, 복사, 블릿" />
+</CardGrid>
+
+## 학습 로그
+
+명세를 읽으면서 나온 질문과 답변을 정리한 개인 학습 기록입니다.
+
+<CardGrid>
+  <LinkCard title="00. Fundamentals" href="/log/vulkan/00_fundamentals/" description="큐 패밀리, 메모리 힙, pAllocator, Fire-and-Forget" />
+  <LinkCard title="01. Initialization" href="/log/vulkan/01_initialization/" description="PFN, 디스패치, 레이어 순서, C API 스타일" />
+  <LinkCard title="02. Devices and Queues" href="/log/vulkan/02_devsandqueues/" description="디스패처블 핸들, dispatch 어원, VkBool32" />
+  <LinkCard title="04. Synchronization" href="/log/vulkan/04_synchronization/" description="(학습 중)" />
+  <LinkCard title="GPU 아키텍처" href="/log/misc/gpu_architecture/" description="GPU 내부 구조, NPU vs Tensor Core, UE 드로우콜" />
+</CardGrid>
