@@ -36,6 +36,7 @@
 
   /* Layout */
   --sl-nav-height: 48px;
+  --sl-sidebar-width: 280px;
   --sl-content-width: 800px;
 
   /* Typography */
@@ -54,8 +55,16 @@
   /* Custom properties */
   --cd-bg-page: #0d1117;
   --cd-bg-header: #161b22;
+  --cd-bg-sidebar: #0d1117;
   --cd-bg-card: #161b22;
+  --cd-bg-code: #161b22;
+  --cd-bg-code-inline: #1c2129;
   --cd-bg-hover: #1c2129;
+  --cd-bg-active: #1f2937;
+  --cd-bg-footer: #010409;
+  --cd-bg-admonition: #161b22;
+  --cd-bg-table-head: #161b22;
+  --cd-bg-table-stripe: #0f1318;
   --cd-text-primary: #e6edf3;
   --cd-text-secondary: #8b949e;
   --cd-text-heading: #f0f6fc;
@@ -86,6 +95,7 @@
   --sl-color-black: #ffffff;
 
   --sl-color-bg-nav: #161b22;
+  --sl-color-bg-sidebar: #f6f8fa;
   --sl-color-hairline-shade: #d0d7de;
   --sl-color-hairline-light: #e3e8ed;
 
@@ -95,8 +105,16 @@
 
   --cd-bg-page: #ffffff;
   --cd-bg-header: #161b22;
+  --cd-bg-sidebar: #f6f8fa;
   --cd-bg-card: #f6f8fa;
+  --cd-bg-code: #f6f8fa;
+  --cd-bg-code-inline: #eff1f3;
   --cd-bg-hover: #eaeef2;
+  --cd-bg-active: #dde2e7;
+  --cd-bg-footer: #f6f8fa;
+  --cd-bg-admonition: #f6f8fa;
+  --cd-bg-table-head: #f6f8fa;
+  --cd-bg-table-stripe: #f6f8fa;
   --cd-text-primary: #1f2328;
   --cd-text-secondary: #656d76;
   --cd-text-heading: #1f2328;
@@ -155,6 +173,11 @@ header.header {
 header.header starlight-theme-select select {
   color: var(--cd-header-text);
   background-color: var(--cd-bg-header);
+}
+
+header.header starlight-theme-select select option {
+  background-color: var(--cd-bg-header);
+  color: var(--cd-header-text);
 }
 
 /* ===== Hero Section ===== */
@@ -224,7 +247,90 @@ header.header starlight-theme-select select {
   background: var(--cd-accent-bg);
 }
 
+/* ===== Sidebar Overrides ===== */
+.sidebar-pane {
+  background-color: var(--cd-bg-sidebar);
+}
+
+@media (min-width: 50rem) {
+  .sidebar-pane {
+    background-color: var(--cd-bg-sidebar);
+    border-inline-end-color: var(--cd-border-color);
+  }
+}
+
+/* Sidebar navigation links */
+nav.sidebar a {
+  font-size: var(--sl-text-sm);
+  color: var(--cd-text-secondary);
+  border-radius: 6px;
+  transition: background 0.15s, color 0.15s;
+}
+nav.sidebar a:hover {
+  background: var(--cd-bg-hover);
+  color: var(--cd-text-primary);
+}
+nav.sidebar a[aria-current='page'] {
+  background: var(--cd-accent-bg);
+  color: var(--cd-accent);
+  font-weight: 600;
+}
+
+/* Sidebar group labels */
+.sidebar-content summary,
+.sidebar-content .large {
+  font-size: 0.76rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--cd-text-primary);
+}
+
+/* ===== Content Area ===== */
+.sl-container {
+  max-width: var(--sl-content-width);
+}
+
+.content-panel + .content-panel {
+  border-top-color: var(--cd-border-subtle);
+}
+
 /* ===== Content Typography ===== */
+.sl-markdown-content h1 {
+  font-size: var(--sl-text-h1);
+  font-weight: 700;
+  color: var(--cd-text-heading);
+  margin-bottom: 8px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--cd-border-color);
+  line-height: var(--sl-line-height-headings);
+}
+
+.sl-markdown-content h2 {
+  font-size: var(--sl-text-h2);
+  font-weight: 700;
+  color: var(--cd-text-heading);
+  margin-top: 40px;
+  margin-bottom: 16px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--cd-border-subtle);
+  line-height: 1.35;
+}
+
+.sl-markdown-content h3 {
+  font-size: var(--sl-text-h3);
+  font-weight: 600;
+  color: var(--cd-text-heading);
+  margin-top: 32px;
+  margin-bottom: 12px;
+  line-height: 1.4;
+}
+
+.sl-markdown-content p {
+  margin-bottom: 16px;
+  color: var(--cd-text-primary);
+}
+
 .sl-markdown-content a {
   color: var(--cd-text-link);
   text-decoration: none;
@@ -238,6 +344,299 @@ header.header starlight-theme-select select {
 .sl-markdown-content strong {
   font-weight: 600;
   color: var(--cd-text-heading);
+}
+
+/* ===== Lists ===== */
+.sl-markdown-content ul,
+.sl-markdown-content ol {
+  margin-bottom: 16px;
+  padding-left: 24px;
+}
+
+.sl-markdown-content li {
+  margin-bottom: 4px;
+  color: var(--cd-text-primary);
+}
+
+.sl-markdown-content li::marker {
+  color: var(--cd-text-secondary);
+}
+
+/* ===== Inline Code ===== */
+.sl-markdown-content :not(pre) > code {
+  background: var(--cd-bg-code-inline);
+  color: var(--cd-text-primary);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.8em;
+  font-family: var(--sl-font-mono);
+}
+
+/* ===== Code Blocks ===== */
+.sl-markdown-content pre {
+  background: var(--cd-bg-code) !important;
+  border: 1px solid var(--cd-border-color);
+  border-radius: 8px;
+  padding: 16px;
+  font-size: 0.78rem;
+  line-height: 1.6;
+  overflow-x: auto;
+}
+
+.sl-markdown-content pre code {
+  font-family: var(--sl-font-mono);
+  font-size: 0.78rem;
+  background: transparent;
+  padding: 0;
+  border-radius: 0;
+}
+
+/* Expressive Code overrides */
+.expressive-code {
+  margin-bottom: 20px;
+}
+
+.expressive-code .frame {
+  border: 1px solid var(--cd-border-color);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.expressive-code pre {
+  border: none;
+  border-radius: 0;
+}
+
+/* ===== Admonitions / Callouts ===== */
+.starlight-aside {
+  border-radius: 8px;
+  border: 1px solid var(--cd-border-color);
+  margin-bottom: 20px;
+  overflow: hidden;
+}
+
+.starlight-aside--note {
+  border-left: 3px solid var(--cd-accent);
+}
+
+.starlight-aside--caution {
+  border-left: 3px solid #d29922;
+}
+
+.starlight-aside--tip {
+  border-left: 3px solid #3fb950;
+}
+
+.starlight-aside--danger {
+  border-left: 3px solid #f85149;
+}
+
+.starlight-aside .starlight-aside__title {
+  font-size: var(--sl-text-sm);
+  font-weight: 700;
+  background: var(--cd-bg-admonition);
+  padding: 10px 16px;
+}
+
+.starlight-aside .starlight-aside__content {
+  padding: 12px 16px;
+}
+
+.starlight-aside .starlight-aside__content p:last-child {
+  margin-bottom: 0;
+}
+
+/* ===== Tables ===== */
+.sl-markdown-content table {
+  display: table;
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: var(--sl-text-sm);
+  margin-bottom: 20px;
+  border: 1px solid var(--cd-border-color);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.sl-markdown-content th {
+  background: var(--cd-bg-table-head);
+  color: var(--cd-text-heading);
+  font-weight: 600;
+  text-align: left;
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--cd-border-color);
+}
+
+.sl-markdown-content th:first-child,
+.sl-markdown-content td:first-child {
+  padding-left: 20px;
+}
+
+.sl-markdown-content td {
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--cd-border-subtle);
+  color: var(--cd-text-primary);
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+
+.sl-markdown-content tr:last-child td {
+  border-bottom: none;
+}
+
+.sl-markdown-content tr:nth-child(even) td {
+  background: var(--cd-bg-table-stripe);
+}
+
+/* ===== .light-bg class for images on dark theme ===== */
+.light-bg {
+  background: #ffffff;
+  padding: 16px;
+  border-radius: 8px;
+  display: block;
+  margin: 16px auto;
+  max-width: 100%;
+}
+
+/* ===== Blockquotes (Q&A / 학습 로그 format) ===== */
+.sl-markdown-content blockquote {
+  border-left: 3px solid var(--cd-accent);
+  padding: 8px 16px;
+  margin: 0 0 16px;
+  background: var(--cd-accent-bg);
+  border-radius: 0 8px 8px 0;
+  color: var(--cd-text-primary);
+}
+
+.sl-markdown-content blockquote p {
+  margin-bottom: 8px;
+}
+
+.sl-markdown-content blockquote p:last-child {
+  margin-bottom: 0;
+}
+
+/* ===== Footnote Tooltip (나무위키 스타일 각주) ===== */
+.fn-ref {
+  position: relative;
+  display: inline;
+}
+
+.fn-ref a {
+  color: var(--cd-accent);
+  text-decoration: none;
+  font-size: 0.75em;
+  font-weight: 700;
+  vertical-align: super;
+  line-height: 0;
+  cursor: pointer;
+}
+
+.fn-ref a:hover {
+  text-decoration: underline;
+}
+
+.fn-tooltip {
+  display: none;
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  width: max-content;
+  max-width: 360px;
+  padding: 10px 14px;
+  background: var(--cd-bg-card);
+  border: 1px solid var(--cd-border-color);
+  border-radius: 8px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+  font-size: 0.78rem;
+  line-height: 1.5;
+  color: var(--cd-text-primary);
+  z-index: 100;
+  pointer-events: none;
+}
+
+.fn-tooltip::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 6px solid transparent;
+  border-top-color: var(--cd-border-color);
+}
+
+.fn-tooltip .fn-title {
+  display: block;
+  margin-bottom: 6px;
+}
+
+.fn-tooltip .fn-title::before {
+  content: 'Q: ';
+  font-weight: 700;
+  color: var(--cd-accent);
+}
+
+.fn-tooltip .fn-title a {
+  color: var(--cd-accent);
+  font-weight: 700;
+  text-decoration: none;
+  font-size: inherit;
+  vertical-align: baseline;
+  line-height: inherit;
+}
+
+.fn-tooltip .fn-title a:hover {
+  text-decoration: underline;
+}
+
+.fn-tooltip .fn-desc {
+  display: block;
+  color: var(--cd-text-secondary);
+}
+
+.fn-tooltip .fn-desc::before {
+  content: 'A: ';
+  font-weight: 700;
+  color: var(--cd-text-primary);
+}
+
+.fn-ref:hover .fn-tooltip {
+  display: block;
+  pointer-events: auto;
+}
+
+/* ===== Footer / Pagination ===== */
+.pagination-links {
+  border-top-color: var(--cd-border-color);
+}
+
+.pagination-links a {
+  border-color: var(--cd-border-color);
+  border-radius: 8px;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.pagination-links a:hover {
+  border-color: var(--cd-accent);
+  background: var(--cd-accent-bg);
+}
+
+/* ===== Right TOC Sidebar ===== */
+starlight-toc a {
+  font-size: 0.72rem;
+  color: var(--cd-text-secondary);
+  transition: color 0.15s;
+  line-height: 1.5;
+}
+
+starlight-toc a:hover {
+  color: var(--cd-text-primary);
+}
+
+starlight-toc a[aria-current='true'] {
+  color: var(--cd-accent);
 }
 
 /* ===== Selection Color ===== */
@@ -259,6 +658,11 @@ starlight-menu-button button {
 
 starlight-menu-button button:hover {
   background-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+:root[data-theme='light'] starlight-menu-button button {
+  background-color: transparent !important;
+  color: var(--cd-header-text) !important;
 }
 
 /* ===== Recent Updates List ===== */
@@ -379,9 +783,27 @@ starlight-menu-button button:hover {
   }
 }
 
+/* ===== Responsive Overrides ===== */
+@media (max-width: 1200px) {
+  /* Hide right TOC on medium screens */
+  .right-sidebar-container {
+    display: none;
+  }
+}
+
+@media (max-width: 600px) {
+  /* Hide search on very small screens */
+  .search-wrapper,
+  site-search {
+    display: none !important;
+  }
+}
+
 /* ===== Print Styles ===== */
 @media print {
   header.header,
+  nav.sidebar,
+  .right-sidebar-container,
   starlight-menu-button {
     display: none !important;
   }
