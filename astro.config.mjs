@@ -20,12 +20,12 @@ export default defineConfig({
       },
       components: {
         Header: './src/components/Header.astro',
+        Sidebar: './src/components/Sidebar.astro',
       },
       customCss: ['./src/styles/custom.css'],
       sidebar: [
         {
           label: 'Vulkan',
-          collapsed: true,
           items: [
             {
               label: '명세 요약',
@@ -50,7 +50,6 @@ export default defineConfig({
         },
         {
           label: 'CUDA',
-          collapsed: true,
           items: [
             {
               label: 'Programming Guide',
@@ -60,7 +59,6 @@ export default defineConfig({
         },
         {
           label: 'Articles',
-          collapsed: true,
           items: [
             {
               label: 'GPU Hardware & Software',
@@ -70,7 +68,6 @@ export default defineConfig({
         },
         {
           label: '학습 로그',
-          collapsed: true,
           items: [
             {
               label: 'Vulkan',
