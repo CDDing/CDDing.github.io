@@ -24,7 +24,7 @@ GPU가 왜 오늘날 중요한가? GPU는 처음에 3D 그래픽으로 주목받
 
 CPU와 GPU의 핵심 차이는 대상 애플리케이션에 있다.
 
-- **CPU**: 단일 스레드 애플리케이션에 맞추어져 최대 속도를 목표로 한다. 정확한 예외 처리(precise exception)를 우선시하며, 이는 프로그램 정확성과 디버깅에 중요하다. <sup>[📝](/log/misc/gpu_architecture/#precise-exception--cpu-vs-gpu "Precise Exception — CPU vs GPU")</sup>
+- **CPU**: 단일 스레드 애플리케이션에 맞추어져 최대 속도를 목표로 한다. 정확한 예외 처리(precise exception)를 우선시하며, 이는 프로그램 정확성과 디버깅에 중요하다. <sup class="fn-ref"><a href="/log/misc/gpu_architecture/#precise-exception--cpu-vs-gpu">[1]</a><span class="fn-tooltip"><span class="fn-title"><a href="/log/misc/gpu_architecture/#precise-exception--cpu-vs-gpu">Precise Exception — CPU vs GPU</a></span><span class="fn-desc">CPU는 ROB로 프로그램 순서를 추적하여 precise exception을 보장. GPU는 그 하드웨어 비용을 ALU에 투자하여 imprecise exception을 선택.</span></span></sup>
 - **GPU**: 병렬 처리에 특화되어 수많은 스레드를 동시에 처리한다. 정확한 예외 처리를 중시하지 않으며, OS 및 I/O 연산을 위한 전용 하드웨어를 활용한다. CPU가 호스트, GPU가 가속기로 동작하는 구조가 자연스럽게 형성된다.
 
 ### GPU ISA
@@ -32,7 +32,7 @@ CPU와 GPU의 핵심 차이는 대상 애플리케이션에 있다.
 ISA(Instruction Set Architecture)는 명령어 집합 아키텍처를 의미한다.
 
 - **CPU**: 공개(open) ISA를 사용하여 하드웨어 플랫폼 간 소프트웨어 호환성을 보장한다.
-- **GPU**: 가속기 모드로 동작하며, 드라이버가 하나의 ISA에서 특정 하드웨어용 ISA로 코드를 변환한다. PTX는 공개 가상 ISA로 도입되었다. <sup>[📝](/log/misc/gpu_architecture/#가속기-모드와-ptx "가속기 모드와 PTX")</sup>
+- **GPU**: 가속기 모드로 동작하며, 드라이버가 하나의 ISA에서 특정 하드웨어용 ISA로 코드를 변환한다. PTX는 공개 가상 ISA로 도입되었다. <sup class="fn-ref"><a href="/log/misc/gpu_architecture/#가속기-모드와-ptx">[2]</a><span class="fn-tooltip"><span class="fn-title"><a href="/log/misc/gpu_architecture/#가속기-모드와-ptx">가속기 모드와 PTX</a></span><span class="fn-desc">GPU는 혼자서 프로그램을 실행할 수 없고 CPU가 지시해야 동작(가속기 모드). PTX는 GPU 세대 간 호환을 위한 가상 ISA로, 드라이버가 실행 시 실제 SASS로 변환.</span></span></sup>
 
 | | CPU | GPU |
 |---|---|---|
@@ -164,7 +164,7 @@ vector_sum() {
 - **스트림 프로세서(SP)** 는 GPU의 ALU 유닛으로, SIMT 레인 또는 코어라고도 한다.
 - **본 강좌에서 코어 ≠ 스트림 프로세서이다.** CPU 코어와 GPU 코어의 혼동을 줄이기 위해 SIMT 레인을 코어라 부르지 않는다.
 
-하나의 SM 내부에는 명령어 캐시, 디코더, 공유 메모리, 여러 스트림 프로세서가 포함된다. <sup>[📝](/log/misc/gpu_architecture/#sm-sp-워프의-관계 "SM, SP, 워프의 관계")</sup>
+하나의 SM 내부에는 명령어 캐시, 디코더, 공유 메모리, 여러 스트림 프로세서가 포함된다. <sup class="fn-ref"><a href="/log/misc/gpu_architecture/#sm-sp-워프의-관계">[3]</a><span class="fn-tooltip"><span class="fn-title"><a href="/log/misc/gpu_architecture/#sm-sp-워프의-관계">SM, SP, 워프의 관계</a></span><span class="fn-desc">SM은 SP들+스케줄러+메모리를 묶은 실행 단위. 워프는 32개 스레드의 소프트웨어 그룹이며, SM의 워프 스케줄러가 준비된 워프를 SP에 매핑하여 실행.</span></span></sup>
 
 ### GPU 파이프라인
 
