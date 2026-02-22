@@ -11,10 +11,11 @@ const { sidebar } = Astro.locals.starlightRoute;
 const pathname = Astro.url.pathname;
 
 const sectionMap: Record<string, string> = {
+  '/log/vulkan/': 'Vulkan',
+  '/log/misc/': 'Articles',
   '/vulkan/': 'Vulkan',
   '/cuda/': 'CUDA',
   '/articles/': 'Articles',
-  '/log/': '학습 로그',
 };
 
 let sectionLabel: string | null = null;
