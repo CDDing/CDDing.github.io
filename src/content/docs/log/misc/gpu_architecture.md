@@ -62,3 +62,111 @@ NVIDIA 방향이면 **Tensor Core**가 더 관련 있음 — GPU 안에 있어�
 핵심은 **RHI(Rendering Hardware Interface) 레이어**. 그래픽스 API를 추상화해서 같은 게임 코드가 Vulkan, DX12, Metal 위에서 동작.
 
 Nanite는 전통적인 드로우콜 대신 **컴퓨트 셰이더로 소프트웨어 래스터라이징**을 해서 드로우콜 자체를 우회하는 구조.
+
+---
+
+## Precise Exception — CPU vs GPU
+
+> **Q.** CPU에서 "정확한 예외 처리(precise exception)를 우선시한다"는 게 무슨 뜻이야? GPU는 왜 이를 우선시하지 않아?
+
+**Precise exception**이란 예외 발생 시 프로세서 상태가 **프로그램 순서대로 정확히 보존**된 것을 의미한다. 구체적으로, 예외가 발생한 명령어 이전의 모든 명령어는 commit 완료, 이후의 명령어는 상태를 변경하지 않은 상태를 보장한다. 이렇게 하면 예외 핸들러가 [정확히 그 지점에서 실행을 재개](https://fiveable.me/advanced-computer-architecture/unit-3/exception-handling-pipelined-processors/study-guide/ulz8mSCscBUvbxNp)할 수 있다.
+
+### CPU — Precise Exception이 필수인 이유
+
+CPU는 out-of-order 실행을 하면서도 [Reorder Buffer(ROB)](https://en.wikipedia.org/wiki/Out-of-order_execution)로 프로그램 순서를 추적하여 precise exception을 보장한다.
+
+**Page Fault 예시:**
+
+```
+명령어 1: a = b + c       ← commit 완료
+명령어 2: d = memory[X]   ← Page Fault 발생 (메모리가 디스크에 있음)
+명령어 3: e = f * g       ← 상태 변경 없음
+```
+
+OS가 페이지를 디스크에서 로드한 뒤, **명령어 2부터 정확히 재개**할 수 있다. 이 외에도 0으로 나누기, segfault, 디버거 브레이크포인트 등에서 정확한 위치를 알 수 있어야 프로그램 정확성과 디버깅이 가능하다.
+
+### GPU — Imprecise Exception을 선택한 이유
+
+GPU는 precise exception에 필요한 하드웨어 비용(ROB 등)을 **ALU를 더 넣는 데** 사용한다. 트레이드오프:
+
+| | CPU | GPU |
+|---|---|---|
+| 예외 처리 | **Precise** — 정확한 지점에서 상태 보존·재개 | **Imprecise** — 대략적 위치, 비동기 보고 |
+| 이유 | 디버깅, OS 가상 메모리, 프로그램 정확성 | 처리량 극대화, 하드웨어 비용 절감 |
+| 디버깅 | 정확한 위치 즉시 확인 | 별도 도구([cuda-memcheck](https://docs.nvidia.com/cuda/cuda-gdb/index.html), cuda-gdb) 필요 |
+
+GPU에서 메모리 폴트가 발생하면, [해당 폴트는 CPU로 전달](https://dl.acm.org/doi/10.1145/3123939.3123950)되어 CPU가 처리하며 그 동안 GPU 파이프라인의 해당 스레드는 정지된다. 수만 개 스레드 각각에 precise exception을 보장하는 것은 현실적으로 불가능에 가까우므로, GPU는 처리량을 위해 이를 포기한 것이다.
+
+> 📚 **참고**
+> - [Exception Handling in Pipelined Processors — Fiveable](https://fiveable.me/advanced-computer-architecture/unit-3/exception-handling-pipelined-processors/study-guide/ulz8mSCscBUvbxNp) — precise vs imprecise exception 정의
+> - [Efficient Exception Handling Support for GPUs — ACM MICRO'17](https://dl.acm.org/doi/10.1145/3123939.3123950) — GPU 예외 처리의 한계와 해결 방안
+> - [CUDA-GDB Documentation — NVIDIA](https://docs.nvidia.com/cuda/cuda-gdb/index.html) — GPU 디버깅 시 imprecise exception 대응
+> - [Out-of-Order Execution — Wikipedia](https://en.wikipedia.org/wiki/Out-of-order_execution) — ROB와 precise exception의 관계
+
+---
+
+## 가속기 모드와 PTX
+
+> **Q.** GPU에서 "가속기 모드"는 무슨 말이야? PTX는 뭐야?
+
+### 가속기 모드(Accelerator Mode)
+
+GPU는 **혼자서 독립적으로 프로그램을 실행할 수 없다**는 의미이다. CPU가 호스트(host), GPU가 장치(device/accelerator)로 동작하는 구조:
+
+- **CPU**: OS 실행, 메모리 할당, I/O 관리, 프로그램 시작 — 모든 것을 스스로 수행
+- **GPU**: CPU가 "이 데이터로 이 커널 실행해"라고 **지시해야만 동작**
+
+[CUDA에서는](https://docs.nvidia.com/cuda/cuda-programming-guide/01-introduction/cuda-platform.html) CPU가 메모리를 할당하고(`cudaMalloc`), 데이터를 전송하고(`cudaMemcpy`), 커널 실행을 지시(`kernel<<<...>>>`)하는 전 과정을 주도한다. GPU에는 OS도, 파일 시스템도, I/O 처리 전용 하드웨어도 없다.
+
+### PTX (Parallel Thread Execution)
+
+CPU의 ISA(예: x86)는 공개되어 있고 세대가 바뀌어도 하위 호환된다. 반면 GPU는 세대마다 **실제 하드웨어 ISA(SASS)가 다르다** (sm_80, sm_90 등). 매번 재컴파일하는 문제를 해결하기 위해 NVIDIA가 도입한 **가상(virtual) ISA**가 [PTX](https://docs.nvidia.com/cuda/parallel-thread-execution/)이다.
+
+```
+CUDA C/C++  →  PTX (가상 ISA, 하드웨어 독립)  →  SASS (실제 명령어, GPU 세대별)
+              컴파일 타임(nvcc)                  설치/실행 시(드라이버 JIT)
+```
+
+PTX의 설계 목표:
+1. **여러 GPU 세대에 걸쳐 안정적인 ISA** 제공
+2. 네이티브 GPU 성능에 비견되는 성능
+3. C/C++ 컴파일러가 타겟으로 삼을 수 있는 **머신 독립 ISA**
+
+Java 바이트코드가 JVM 위에서 플랫폼 독립적으로 실행되듯, PTX는 GPU 드라이버 위에서 GPU 세대 독립적으로 실행된다.
+
+> 📚 **참고**
+> - [PTX ISA 9.1 — NVIDIA Official Documentation](https://docs.nvidia.com/cuda/parallel-thread-execution/) — PTX 정의, 설계 목표, 컴파일 파이프라인
+> - [The CUDA Platform — CUDA Programming Guide](https://docs.nvidia.com/cuda/cuda-programming-guide/01-introduction/cuda-platform.html) — CUDA → PTX → cubin 컴파일 흐름
+> - [Introduction to GPU Architecture — ENCCS](https://enccs.github.io/openmp-gpu/gpu-architecture/) — CPU host / GPU device 구조
+
+---
+
+## SM, SP, 워프의 관계
+
+> **Q.** SM이 여러 SP를 보유하고, SM이 SP를 운용하는 단위가 워프/웨이브프론트 — 맞나?
+
+방향은 맞지만 한 가지 보정이 필요하다. 워프는 **SP(하드웨어)의 그룹이 아니라 스레드(소프트웨어)의 그룹**이다.
+
+### 정확한 계층 구조
+
+- **SM (Streaming Multiprocessor)**: SP들 + 워프 스케줄러 + 레지스터 파일 + 공유 메모리를 묶은 실행 단위. CPU 코어에 대응.
+- **SP (Stream Processor / CUDA Core)**: 하나의 ALU. 한 번에 하나의 스레드 명령어를 실행하는 하드웨어.
+- **워프 (Warp)**: [32개 **스레드**의 묶음](https://docs.nvidia.com/cuda/cuda-programming-guide/01-introduction/programming-model.html). SM의 워프 스케줄러가 관리하는 최소 스케줄링 단위.
+
+프로그래머가 1024개 스레드를 요청하면 → 32개씩 묶어 워프 32개 생성 → 워프 스케줄러가 준비된 워프를 골라 SP들에 매핑하여 실행. SM에는 SP 수보다 워프가 훨씬 많이 존재할 수 있으며, 워프 A가 메모리 대기 중이면 즉시 워프 B로 전환하여 [레이턴시를 숨긴다](https://modal.com/gpu-glossary/device-software/warp).
+
+### 벤더별 용어 차이
+
+| 개념 | NVIDIA | AMD | Intel (Xe) |
+|------|--------|-----|------------|
+| 실행 단위 묶음 | SM | CU (Compute Unit) | EU (Execution Unit) |
+| ALU 유닛 | SP / CUDA Core | Stream Processor | ALU |
+| 스레드 그룹 | Warp (32) | Wavefront (64, RDNA는 32도 지원) | SIMD Thread (8~16) |
+| 스레드 블록 | Thread Block | Work-group | Work-group |
+
+강의에서 "워프/웨이브프론트를 동의어로 사용한다"고 한 이유는 같은 개념의 벤더별 이름이기 때문이다. OpenCL 표준에서는 벤더 중립적으로 **sub-group**이라 부른다.
+
+> 📚 **참고**
+> - [CUDA Programming Guide — Programming Model](https://docs.nvidia.com/cuda/cuda-programming-guide/01-introduction/programming-model.html) — 스레드 → 워프 → 블록 → SM 매핑
+> - [What is a Warp? — GPU Glossary (Modal)](https://modal.com/gpu-glossary/device-software/warp) — 워프 정의, SM-워프-스레드 계층 구조
+> - [Understanding Warp Scheduling — NVIDIA Developer Forums](https://forums.developer.nvidia.com/t/understanding-warp-scheduling-on-a-streaming-multiprocessor/359568) — 워프 스케줄링 메커니즘
