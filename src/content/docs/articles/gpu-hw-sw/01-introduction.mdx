@@ -27,12 +27,16 @@ CPU와 GPU의 핵심 차이는 대상 애플리케이션에 있다.
 - **CPU**: 단일 스레드 애플리케이션에 맞추어져 최대 속도를 목표로 한다. 정확한 예외 처리(precise exception)를 우선시하며, 이는 프로그램 정확성과 디버깅에 중요하다.
 - **GPU**: 병렬 처리에 특화되어 수많은 스레드를 동시에 처리한다. 정확한 예외 처리를 중시하지 않으며, OS 및 I/O 연산을 위한 전용 하드웨어를 활용한다. CPU가 호스트, GPU가 가속기로 동작하는 구조가 자연스럽게 형성된다.
 
+📝 **학습 로그**: [Precise Exception — CPU vs GPU](/log/misc/gpu_architecture/#precise-exception--cpu-vs-gpu "CPU는 왜 precise exception이 필수이고, GPU는 왜 imprecise를 선택했는가")
+
 ### GPU ISA
 
 ISA(Instruction Set Architecture)는 명령어 집합 아키텍처를 의미한다.
 
 - **CPU**: 공개(open) ISA를 사용하여 하드웨어 플랫폼 간 소프트웨어 호환성을 보장한다.
 - **GPU**: 가속기 모드로 동작하며, 드라이버가 하나의 ISA에서 특정 하드웨어용 ISA로 코드를 변환한다. PTX는 공개 가상 ISA로 도입되었다.
+
+📝 **학습 로그**: [가속기 모드와 PTX](/log/misc/gpu_architecture/#가속기-모드와-ptx "GPU가 가속기로 동작하는 이유와 PTX 가상 ISA의 역할")
 
 | | CPU | GPU |
 |---|---|---|
@@ -165,6 +169,8 @@ vector_sum() {
 - **본 강좌에서 코어 ≠ 스트림 프로세서이다.** CPU 코어와 GPU 코어의 혼동을 줄이기 위해 SIMT 레인을 코어라 부르지 않는다.
 
 하나의 SM 내부에는 명령어 캐시, 디코더, 공유 메모리, 여러 스트림 프로세서가 포함된다.
+
+📝 **학습 로그**: [SM, SP, 워프의 관계](/log/misc/gpu_architecture/#sm-sp-워프의-관계 "SM → 워프 → 스레드 → SP 매핑 구조와 벤더별 용어 차이")
 
 ### GPU 파이프라인
 

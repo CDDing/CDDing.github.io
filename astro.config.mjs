@@ -64,6 +64,12 @@ export default defineConfig({
               label: 'GPU Hardware & Software',
               autogenerate: { directory: 'articles/gpu-hw-sw' },
             },
+            {
+              label: '학습 로그',
+              items: [
+                { label: 'GPU 아키텍처', slug: 'log/misc/gpu_architecture' },
+              ],
+            },
           ],
         },
         {
