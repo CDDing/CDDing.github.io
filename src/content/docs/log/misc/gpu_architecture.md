@@ -145,11 +145,11 @@ Java 바이트코드가 JVM 위에서 플랫폼 독립적으로 실행되듯, PT
 
 > **Q.** SM이 여러 SP를 보유하고, SM이 SP를 운용하는 단위가 워프/웨이브프론트 — 맞나?
 
-방향은 맞지만 한 가지 보정이 필요하다. 워프는 **SP(하드웨어)의 그룹이 아니라 스레드(소프트웨어)의 그룹**이다.
+방향은 맞지만 한 가지 보정이 필요하다. 워프는 **SP(하드웨어)의 그룹이 아니라 스레드(소프트웨어)의 그룹**이다. <sup class="fn-ref"><a href="/log/misc/gpu_architecture/#gpu-스레드의-본질--실행-컨텍스트">[1]</a><span class="fn-tooltip"><span class="fn-title"><a href="/log/misc/gpu_architecture/#gpu-스레드의-본질--실행-컨텍스트">GPU 스레드의 본질 — 실행 컨텍스트</a></span><span class="fn-desc">스레드는 함수가 아니라 실행 인스턴스(PC + 레지스터 + ID). 레지스터 파일에 상주하므로 워프 전환 비용이 0.</span></span></sup>
 
 ### 정확한 계층 구조
 
-- **SM (Streaming Multiprocessor)**: SP들 + 워프 스케줄러 + 레지스터 파일 + 공유 메모리를 묶은 실행 단위. CPU 코어에 대응.
+- **SM (Streaming Multiprocessor)**: SP들 + 워프 스케줄러 + 레지스터 파일 + 공유 메모리를 묶은 실행 단위. CPU 코어에 대응. <sup class="fn-ref"><a href="/log/misc/gpu_architecture/#레지스터-파일-vs-sp--분할되는-것은-무엇인가">[2]</a><span class="fn-tooltip"><span class="fn-title"><a href="/log/misc/gpu_architecture/#레지스터-파일-vs-sp--분할되는-것은-무엇인가">레지스터 파일 vs SP</a></span><span class="fn-desc">레지스터 파일은 스레드마다 파티션 분할. SP는 분할하지 않고 워프가 교대로 사용하는 공유 연산 유닛.</span></span></sup>
 - **SP (Stream Processor / CUDA Core)**: 하나의 ALU. 한 번에 하나의 스레드 명령어를 실행하는 하드웨어.
 - **워프 (Warp)**: [32개 **스레드**의 묶음](https://docs.nvidia.com/cuda/cuda-programming-guide/01-introduction/programming-model.html). SM의 워프 스케줄러가 관리하는 최소 스케줄링 단위.
 
