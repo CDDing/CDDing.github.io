@@ -1,0 +1,88 @@
+---
+import StarlightPage from '@astrojs/starlight/components/StarlightPage.astro';
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+  const notes = await getCollection('notes');
+
+  const tagSet = new Set<string>();
+  notes.forEach((note) => {
+    note.data.tags.forEach((tag: string) => {
+      tagSet.add(tag);
+      tagSet.add(tag.split('/')[0]);
+    });
+  });
+
+  return [...tagSet].map((tag) => ({
+    params: { tag },
+    props: { tag },
+  }));
+}
+
+const { tag } = Astro.props;
+const notes = await getCollection('notes');
+const isCategory = !tag.includes('/');
+
+const filtered = notes.filter((note) =>
+  note.data.tags.some((t: string) =>
+    isCategory ? t.startsWith(tag + '/') || t === tag : t === tag
+  )
+);
+
+const sorted = filtered.sort(
+  (a, b) => new Date(b.data.lastUpdated).getTime() - new Date(a.data.lastUpdated).getTime()
+);
+
+const subTags = isCategory
+  ? [...new Set(
+      notes
+        .flatMap((n) => n.data.tags)
+        .filter((t: string) => t.startsWith(tag + '/'))
+    )].sort()
+  : [];
+
+function countQA(body: string): number {
+  return (body.match(/^## Q[.:]/gm) || []).length;
+}
+
+function countByTag(t: string): number {
+  return notes.filter((n) => n.data.tags.includes(t)).length;
+}
+---
+
+<StarlightPage frontmatter={{ title: `#${tag}`, description: `${tag} 태그 노트 목록` }}>
+  {isCategory && subTags.length > 0 && (
+    <div class="tag-filters">
+      {subTags.map((st) => (
+        <a href={`/notes/tags/${st}/`} class="tag-filter">
+          {st.split('/')[1]} ({countByTag(st)})
+        </a>
+      ))}
+    </div>
+  )}
+
+  <div class="notes-grid">
+    {sorted.map((note) => {
+      const qaCount = countQA(note.body ?? '');
+      const dateStr = note.data.lastUpdated.toISOString().slice(0, 10);
+      return (
+        <a href={`/notes/${note.id}/`} class="note-card">
+          <h3 class="note-card-title">{note.data.title}</h3>
+          <div class="note-card-tags">
+            {note.data.tags.map((t: string) => {
+              const category = t.split('/')[0];
+              return <span class={`note-tag badge-${category}`}>#{t}</span>;
+            })}
+          </div>
+          <span class="note-card-info">
+            Q&A {qaCount}개 · 최종 업데이트 {dateStr}
+          </span>
+        </a>
+      );
+    })}
+  </div>
+
+  <p style="margin-top: 24px;">
+    <a href="/notes/">← 전체 노트</a>
+  </p>
+</StarlightPage>
