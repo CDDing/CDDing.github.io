@@ -1,0 +1,38 @@
+---
+import StarlightPage from '@astrojs/starlight/components/StarlightPage.astro';
+import { getCollection, render } from 'astro:content';
+
+export async function getStaticPaths() {
+  const notes = await getCollection('notes');
+  return notes.map((note) => ({
+    params: { slug: note.id },
+    props: { note },
+  }));
+}
+
+const { note } = Astro.props;
+const { Content, headings } = await render(note);
+
+const tagBadges = note.data.tags
+  .map((tag: string) => {
+    const category = tag.split('/')[0];
+    return `<a href="/notes/tags/${tag}/" class="note-tag badge-${category}">#${tag}</a>`;
+  })
+  .join(' ');
+---
+
+<StarlightPage
+  frontmatter={{
+    title: note.data.title,
+    lastUpdated: note.data.lastUpdated,
+    tableOfContents: { maxHeadingLevel: 2 },
+  }}
+  headings={headings}
+>
+  <div class="note-meta">
+    <Fragment set:html={tagBadges} />
+  </div>
+  <div class="note-content">
+    <Content />
+  </div>
+</StarlightPage>
