@@ -2,9 +2,9 @@ export interface Update {
   title: string;
   href: string;
   /** Controls badge CSS class (badge-vulkan / badge-cuda / badge-articles) and filtering */
-  category: 'vulkan' | 'cuda' | 'articles';
+  category: 'vulkan' | 'cuda' | 'articles' | 'notes';
   /** Displayed text inside the badge */
-  source: 'Vulkan Spec' | 'CUDA Guide' | 'Article';
+  source: 'Vulkan Spec' | 'CUDA Guide' | 'Article' | 'Note';
   date: string; // YYYY-MM-DD
 }
 
