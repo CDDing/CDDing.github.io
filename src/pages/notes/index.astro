@@ -1,0 +1,81 @@
+---
+import StarlightPage from '@astrojs/starlight/components/StarlightPage.astro';
+import { getCollection } from 'astro:content';
+
+const notes = await getCollection('notes');
+
+const sorted = notes.sort(
+  (a, b) => new Date(b.data.lastUpdated).getTime() - new Date(a.data.lastUpdated).getTime()
+);
+
+const categories = [...new Set(
+  notes.flatMap((n) => n.data.tags.map((t: string) => t.split('/')[0]))
+)].sort();
+
+function countQA(body: string): number {
+  return (body.match(/^## Q[.:]/gm) || []).length;
+}
+---
+
+<StarlightPage frontmatter={{ title: 'Notes', description: '자유로운 Q&A 학습 노트' }}>
+  <div class="tag-filters" id="tag-filters">
+    {categories.map((cat) => (
+      <button class="tag-filter" data-category={cat}>{cat}</button>
+    ))}
+  </div>
+
+  <div class="notes-grid" id="notes-grid">
+    {sorted.map((note) => {
+      const qaCount = countQA(note.body ?? '');
+      const cats = [...new Set(note.data.tags.map((t: string) => t.split('/')[0]))];
+      const dateStr = note.data.lastUpdated.toISOString().slice(0, 10);
+      return (
+        <a
+          href={`/notes/${note.id}/`}
+          class="note-card"
+          data-categories={cats.join(',')}
+        >
+          <h3 class="note-card-title">{note.data.title}</h3>
+          <div class="note-card-tags">
+            {note.data.tags.map((tag: string) => {
+              const category = tag.split('/')[0];
+              return <span class={`note-tag badge-${category}`}>#{tag}</span>;
+            })}
+          </div>
+          <span class="note-card-info">
+            Q&A {qaCount}개 · 최종 업데이트 {dateStr}
+          </span>
+        </a>
+      );
+    })}
+  </div>
+
+  <script>
+    const filters = document.querySelectorAll<HTMLButtonElement>('.tag-filter');
+    const cards = document.querySelectorAll<HTMLAnchorElement>('.note-card');
+    let activeCategory: string | null = null;
+
+    filters.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const cat = btn.dataset.category!;
+        if (activeCategory === cat) {
+          activeCategory = null;
+          btn.classList.remove('active');
+        } else {
+          filters.forEach((b) => b.classList.remove('active'));
+          activeCategory = cat;
+          btn.classList.add('active');
+        }
+
+        cards.forEach((card) => {
+          const cats = (card.dataset.categories || '').split(',');
+          if (!activeCategory || cats.includes(activeCategory)) {
+            card.style.display = '';
+          } else {
+            card.style.display = 'none';
+          }
+        });
+      });
+    });
+  </script>
+</StarlightPage>
