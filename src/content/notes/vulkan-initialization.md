@@ -1,8 +1,11 @@
 ---
-title: "Initialization 학습 로그"
-sidebar:
-  label: "01. Initialization"
+title: "Vulkan Initialization"
+lastUpdated: 2026-02-16
+tags:
+  - vulkan/initialization
 ---
+
+<div class="note-date">2026-02-16</div>
 
 ## PFN 접두사의 의미
 

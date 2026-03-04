@@ -1,8 +1,11 @@
 ---
-title: "Devices and Queues 학습 로그"
-sidebar:
-  label: "02. Devices and Queues"
+title: "Vulkan Devices and Queues"
+lastUpdated: 2026-02-16
+tags:
+  - vulkan/devices-and-queues
 ---
+
+<div class="note-date">2026-02-16</div>
 
 ## 디스패처블 핸들(Dispatchable Handle)이란?
 
