@@ -35,6 +35,9 @@ const currentPath = Astro.url.pathname;
         <a href={`${base}articles/graphics-pipeline/`} role="menuitem">A Trip Through the Graphics Pipeline</a>
       </div>
     </div>
+    <div class="nav-item">
+      <a href={`${base}notes/`} class="nav-top" aria-current={currentPath.startsWith(`${base}notes`) ? 'page' : undefined}>Notes</a>
+    </div>
   </nav>
   <div class="search-wrapper sl-flex print:hidden">
     <Search />
