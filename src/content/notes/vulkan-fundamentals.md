@@ -1,8 +1,11 @@
 ---
-title: "Fundamentals 학습 로그"
-sidebar:
-  label: "00. Fundamentals"
+title: "Vulkan Fundamentals"
+lastUpdated: 2026-02-16
+tags:
+  - vulkan/fundamentals
 ---
+
+<div class="note-date">2026-02-16</div>
 
 ## 호스트와 디바이스의 엔디언이 동일해야 하는 이유
 
