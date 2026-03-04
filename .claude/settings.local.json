@@ -1,0 +1,20 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(find:*)",
+      "WebFetch(domain:lowyx.com)",
+      "Bash(curl:*)",
+      "Bash(tail:*)",
+      "WebFetch(domain:www.irisa.fr)",
+      "WebFetch(domain:fiveable.me)",
+      "WebFetch(domain:cdding.github.io)",
+      "WebFetch(domain:docs.nvidia.com)",
+      "WebFetch(domain:modal.com)",
+      "Bash(CLAUDECODE= claude plugins:*)",
+      "WebFetch(domain:en.wikipedia.org)",
+      "WebFetch(domain:developer.nvidia.com)",
+      "Bash(xargs:*)",
+      "Bash(rm:*)"
+    ]
+  }
+}
