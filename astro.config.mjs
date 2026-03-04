@@ -66,6 +66,12 @@ export default defineConfig({
             },
           ],
         },
+        {
+          label: 'Notes',
+          items: [
+            { label: '전체 노트', link: '/notes/' },
+          ],
+        },
       ],
     }),
   ],
