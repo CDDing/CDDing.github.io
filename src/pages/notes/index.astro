@@ -13,7 +13,7 @@ const categories = [...new Set(
 )].sort();
 
 function countQA(body: string): number {
-  return (body.match(/^## Q[.:]/gm) || []).length;
+  return (body.match(/^## /gm) || []).length;
 }
 ---
 

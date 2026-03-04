@@ -42,7 +42,7 @@ const subTags = isCategory
   : [];
 
 function countQA(body: string): number {
-  return (body.match(/^## Q[.:]/gm) || []).length;
+  return (body.match(/^## /gm) || []).length;
 }
 
 function countByTag(t: string): number {
