@@ -1,6 +1,6 @@
 ---
 title: "GPU 아키텍처"
-lastUpdated: 2026-02-22
+lastUpdated: 2026-03-05
 tags:
   - graphics/gpu-architecture
 ---
@@ -298,3 +298,177 @@ SM 내부:
 > - [Stencil (numerical analysis) — Wikipedia](https://en.wikipedia.org/wiki/Stencil_(numerical_analysis)) — 수치 해석 스텐실의 정의와 기하학적 배치
 > - [Iterative Stencil Loops — Wikipedia](https://en.wikipedia.org/wiki/Iterative_Stencil_Loops) — 반복 스텐실 루프의 정의, 응용 분야, 병렬화 과제
 > - [Finite Difference Methods in CUDA C/C++, Part 1 — NVIDIA Developer Blog](https://developer.nvidia.com/blog/finite-difference-methods-cuda-cc-part-1/) — CUDA에서 유한차분법(스텐실) 구현과 공유 메모리 활용
+
+---
+
+## SPMD 데이터 인덱싱과 메모리-SM 매핑 시각화
+
+> **Q.** 간단한 SPMD나 데이터 인덱싱 예제에서 메모리와 SM의 관계를 시각화할 수 있나? 눈으로 보면서 이해하고 싶다.
+
+벡터 덧셈 `C[i] = A[i] + B[i]`를 16개 요소, 4개 블록(블록당 4스레드)으로 실행하는 경우를 시각화한다.
+
+### 1. 전체 구조: 그리드 → SM 매핑
+
+```
+                         ┌─────────────────────────────────┐
+                         │         Global Memory (DRAM)     │
+                         │  A[0..15]   B[0..15]   C[0..15]  │
+                         └──────────┬──────────┬────────────┘
+                                    │          │
+                    ┌───────────────┼──────────┼───────────────┐
+                    │               GPU                        │
+                    │                                          │
+        ┌───────────┴───────────┐          ┌───────────┴───────────┐
+        │        SM 0           │          │        SM 1           │
+        │                       │          │                       │
+        │  ┌─────────────────┐  │          │  ┌─────────────────┐  │
+        │  │ Block 0         │  │          │  │ Block 2         │  │
+        │  │ Shared Memory   │  │          │  │ Shared Memory   │  │
+        │  │ T0  T1  T2  T3  │  │          │  │ T0  T1  T2  T3  │  │
+        │  │ ↓   ↓   ↓   ↓   │  │          │  │ ↓   ↓   ↓   ↓   │  │
+        │  │ [0] [1] [2] [3] │  │          │  │ [8] [9] [10][11]│  │
+        │  └─────────────────┘  │          │  └─────────────────┘  │
+        │  ┌─────────────────┐  │          │  ┌─────────────────┐  │
+        │  │ Block 1         │  │          │  │ Block 3         │  │
+        │  │ Shared Memory   │  │          │  │ Shared Memory   │  │
+        │  │ T0  T1  T2  T3  │  │          │  │ T0  T1  T2  T3  │  │
+        │  │ ↓   ↓   ↓   ↓   │  │          │  │ ↓   ↓   ↓   ↓   │  │
+        │  │ [4] [5] [6] [7] │  │          │  │ [12][13][14][15]│  │
+        │  └─────────────────┘  │          │  └─────────────────┘  │
+        └───────────────────────┘          └───────────────────────┘
+```
+
+핵심 포인트:
+- 각 **블록은 하나의 SM에 배정**되고, 다른 SM으로 이동하지 않는다
+- 하나의 SM에 **여러 블록이 공존**할 수 있다 (자원이 허락하면)
+- 블록 간 배정 순서는 **보장되지 않는다**
+
+### 2. 인덱스 계산 과정
+
+`idx = blockIdx.x * blockDim.x + threadIdx.x` 공식이 전역 메모리 주소를 결정한다:
+
+```
+Block 0 (blockIdx.x = 0, blockDim.x = 4)
+┌──────────────────────────────────────────┐
+│ threadIdx.x │  0      1      2      3    │
+│ idx 계산    │ 0*4+0  0*4+1  0*4+2  0*4+3 │
+│ 전역 idx    │  0      1      2      3    │
+│ 접근 주소   │ A[0]   A[1]   A[2]   A[3]  │
+└──────────────────────────────────────────┘
+
+Block 2 (blockIdx.x = 2, blockDim.x = 4)
+┌──────────────────────────────────────────┐
+│ threadIdx.x │  0      1      2      3    │
+│ idx 계산    │ 2*4+0  2*4+1  2*4+2  2*4+3 │
+│ 전역 idx    │  8      9      10     11   │
+│ 접근 주소   │ A[8]   A[9]   A[10]  A[11] │
+└──────────────────────────────────────────┘
+```
+
+### 3. 메모리 계층과 접근 경로
+
+각 스레드가 데이터를 읽고 쓸 때 거치는 메모리 계층:
+
+```
+스레드 (SP에서 실행)
+  │
+  ├── 레지스터 (Thread-private)
+  │     int idx = ...;      ← 스레드 고유, 가장 빠름
+  │     float temp = ...;
+  │
+  ├── 공유 메모리 (Block-scope, 온칩)
+  │     __shared__ float s[N];  ← 같은 블록의 스레드끼리 공유
+  │     ┌─────────────────────────────┐
+  │     │  Block 0의 공유 메모리       │ ← SM 0 온칩
+  │     │  Block 1의 공유 메모리       │ ← SM 0 온칩 (별도 공간)
+  │     │  ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─  │
+  │     │  Block 2의 공유 메모리       │ ← SM 1 온칩
+  │     │  Block 3의 공유 메모리       │ ← SM 1 온칩 (별도 공간)
+  │     └─────────────────────────────┘
+  │           ⚠️ Block 0은 Block 2의 공유 메모리에 접근 불가
+  │
+  └── 전역 메모리 (Grid-scope, 오프칩 DRAM)
+        A[], B[], C[]  ← 모든 블록이 접근 가능, 느림
+```
+
+### 4. 벡터 덧셈의 실제 메모리 흐름
+
+```
+시간 →
+
+[Global Memory]  A[0..3], B[0..3]
+       │ cudaMemcpy (호스트→디바이스)
+       ▼
+─── SM 0, Block 0 ───────────────────────────
+  T0: reg_a = A[0]    ──┐
+  T1: reg_a = A[1]      │ 전역 메모리에서
+  T2: reg_a = A[2]      │ 레지스터로 로드
+  T3: reg_a = A[3]    ──┘
+       │
+  T0: reg_c = reg_a + reg_b  ──┐
+  T1: reg_c = reg_a + reg_b    │ 레지스터에서 연산
+  T2: reg_c = reg_a + reg_b    │ (가장 빠름)
+  T3: reg_c = reg_a + reg_b  ──┘
+       │
+  T0: C[0] = reg_c    ──┐
+  T1: C[1] = reg_c      │ 레지스터에서
+  T2: C[2] = reg_c      │ 전역 메모리로 저장
+  T3: C[3] = reg_c    ──┘
+─────────────────────────────────────────────
+       │
+       ▼
+[Global Memory]  C[0..3] 완성
+```
+
+벡터 덧셈처럼 단순한 경우 공유 메모리를 쓸 필요가 없다 — 각 요소를 한 번만 읽고 한 번만 쓰기 때문이다. **같은 데이터를 여러 스레드가 재사용**할 때(스텐실 연산 등) 공유 메모리가 효과적이다.
+
+> 📚 **참고**
+> - [CUDA Programming Guide — Programming Model](https://docs.nvidia.com/cuda/cuda-programming-guide/01-introduction/programming-model.html) — 스레드/블록/그리드 계층, 메모리 계층 다이어그램
+> - [Using Shared Memory in CUDA C/C++ — NVIDIA Developer Blog](https://developer.nvidia.com/blog/using-shared-memory-cuda-cc/) — 공유 메모리 접근 패턴, 뱅크 충돌
+> - [Memory Hierarchy — GPU Glossary (Modal)](https://modal.com/gpu-glossary/device-software/memory-hierarchy) — 레지스터 → 공유 메모리 → L1 → L2 → 전역 메모리 계층 설명
+> - [Cornell Virtual Workshop — GPU Memory Levels](https://cvw.cac.cornell.edu/gpu-architecture/gpu-memory/memory_levels) — GPU 메모리 레벨별 특성 비교
+
+---
+
+## 공유 메모리는 SM 소유, 블록 단위 파티셔닝
+
+> **Q.** 공유 메모리가 "CUDA 블록 내에서만 접근 가능"이라고 표현되어 있는데, 엄밀히 말하면 SM에 속한 건가?
+
+맞다. **물리적으로는 SM의 하드웨어**이고, **논리적으로 블록 단위로 파티셔닝**되는 것이다. CUDA 공식 문서의 정확한 표현:
+
+> ["each SM has a set of 32-bit registers that are partitioned among the warps, and a **shared memory that is partitioned among the thread blocks**"](https://docs.nvidia.com/cuda/cuda-programming-guide/03-advanced/advanced-kernel-programming.html)
+
+### 물리 vs 논리 구분
+
+| 관점 | 공유 메모리의 소속 |
+|------|-------------------|
+| **물리적** (하드웨어) | SM에 내장된 온칩 SRAM. L1 캐시와 같은 물리 자원([unified data cache](https://docs.nvidia.com/cuda/cuda-programming-guide/03-advanced/advanced-kernel-programming.html))을 공유한다 |
+| **논리적** (프로그래밍 모델) | 블록 단위로 분할·할당. 블록 A의 스레드는 블록 B에 할당된 공유 메모리에 접근 불가 |
+
+### 시각화
+
+```
+SM 0 (하드웨어)
+┌──────────────────────────────────────┐
+│  Unified Data Cache (온칩 SRAM)      │
+│  ┌────────────┬────────────┬───────┐ │
+│  │ Block 0용  │ Block 1용  │  L1   │ │  ← 하드웨어는 하나,
+│  │ shared mem │ shared mem │ cache │ │    블록마다 파티션 분할
+│  │  (2 KB)    │  (2 KB)    │(28KB) │ │
+│  └────────────┴────────────┴───────┘ │
+│                                      │
+│  Block 0 스레드 → Block 0 파티션만 접근 │
+│  Block 1 스레드 → Block 1 파티션만 접근 │
+└──────────────────────────────────────┘
+```
+
+레지스터 파일과 같은 패턴이다:
+- **레지스터 파일**: SM 소유 → **워프(스레드) 단위로 파티셔닝**
+- **공유 메모리**: SM 소유 → **블록 단위로 파티셔닝**
+
+이 때문에 공유 메모리 사용량이 점유율에 직접 영향을 미친다. SM의 공유 메모리 총량이 32KB이고 블록당 8KB를 쓰면 최대 4블록만 공존할 수 있다. 블록이 종료되면 해당 파티션이 해제되어 새 블록에 재할당된다.
+
+> 📚 **참고**
+> - [CUDA Programming Guide §3.2 — Advanced Kernel Programming](https://docs.nvidia.com/cuda/cuda-programming-guide/03-advanced/advanced-kernel-programming.html) — "shared memory that is partitioned among the thread blocks", unified data cache 설명
+> - [CUDA Programming Guide — Programming Model](https://docs.nvidia.com/cuda/cuda-programming-guide/01-introduction/programming-model.html) — "Each SM has its own register file and shared memory"
+> - [Using Shared Memory in CUDA C/C++ — NVIDIA Developer Blog](https://developer.nvidia.com/blog/using-shared-memory-cuda-cc/) — 공유 메모리 할당 모델, 뱅크 구조
