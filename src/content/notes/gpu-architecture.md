@@ -472,3 +472,60 @@ SM 0 (하드웨어)
 > - [CUDA Programming Guide §3.2 — Advanced Kernel Programming](https://docs.nvidia.com/cuda/cuda-programming-guide/03-advanced/advanced-kernel-programming.html) — "shared memory that is partitioned among the thread blocks", unified data cache 설명
 > - [CUDA Programming Guide — Programming Model](https://docs.nvidia.com/cuda/cuda-programming-guide/01-introduction/programming-model.html) — "Each SM has its own register file and shared memory"
 > - [Using Shared Memory in CUDA C/C++ — NVIDIA Developer Blog](https://developer.nvidia.com/blog/using-shared-memory-cuda-cc/) — 공유 메모리 할당 모델, 뱅크 구조
+
+---
+
+## 온칩(On-Chip) vs 오프칩(Off-Chip) 메모리
+
+> **Q.** 온칩과 오프칩의 정의는 뭐야?
+
+GPU(또는 CPU) **다이(die) 위에 물리적으로 같이 만들어져 있느냐**의 차이다.
+
+### 정의
+
+| | 온칩 (On-Chip) | 오프칩 (Off-Chip) |
+|---|---|---|
+| **위치** | 프로세서 다이(실리콘 칩) **내부** | 프로세서 다이 **외부**, 별도 칩 |
+| **기술** | [SRAM](https://en.wikipedia.org/wiki/Static_random-access_memory) (플립플롭 회로) | [DRAM](https://en.wikipedia.org/wiki/Dynamic_random-access_memory) (커패시터) |
+| **속도** | 매우 빠름 (TB/s 대역폭) | 상대적으로 느림 (수백 GB/s) |
+| **용량** | 작음 (수 MB ~ 수십 MB) | 큼 (수 GB ~ 수십 GB) |
+| **비용** | 면적당 비쌈 | 면적당 저렴 |
+
+### GPU에서의 구체적 매핑
+
+```
+┌─────────────────────────────────┐
+│         GPU 다이 (실리콘 칩)       │
+│                                 │
+│  SM 0 ─┬─ 레지스터 파일 (SRAM)  │ ← 온칩: 가장 빠름
+│        ├─ 공유 메모리  (SRAM)   │ ← 온칩: ~100x 빠름
+│        └─ L1 캐시     (SRAM)   │ ← 온칩
+│                                 │
+│  SM 1 ─┬─ 레지스터 파일         │
+│        ├─ 공유 메모리           │
+│        └─ L1 캐시              │
+│                                 │
+│  L2 캐시 (모든 SM 공유, SRAM)    │ ← 온칩
+└─────────────────────────────────┘
+         │ 버스/인터커넥트
+         ▼
+┌─────────────────────────────────┐
+│   전역 메모리 (GDDR6 / HBM)     │ ← 오프칩: 별도 메모리 칩
+│   DRAM, 수 GB ~ 수십 GB         │
+└─────────────────────────────────┘
+```
+
+### SRAM vs DRAM — 왜 다른가
+
+핵심 차이는 **저장 방식**이다:
+
+- **SRAM**: 6개 트랜지스터로 1비트 저장. [리프레시가 필요 없고](https://en.wikipedia.org/wiki/Static_random-access_memory) 전원만 있으면 데이터 유지. 빠르지만 트랜지스터 6개가 필요하므로 밀도가 낮다.
+- **DRAM**: 1개 트랜지스터 + 1개 커패시터로 1비트 저장. [커패시터 전하가 누출되므로 주기적 리프레시 필요](https://en.wikipedia.org/wiki/Dynamic_random-access_memory). 느리지만 밀도가 높아 대용량에 적합.
+
+같은 칩 면적에 SRAM 대비 [DRAM은 약 5~6배 더 많은 비트](https://www.viksnewsletter.com/p/a-close-look-at-sram-for-inference)를 넣을 수 있다. 그래서 빠른 소량(캐시, 공유 메모리)에는 SRAM, 느린 대량(전역 메모리)에는 DRAM을 사용하는 계층 구조가 만들어진다.
+
+> 📚 **참고**
+> - [Static Random-Access Memory — Wikipedia](https://en.wikipedia.org/wiki/Static_random-access_memory) — SRAM 구조, 6T 셀, 리프레시 불필요
+> - [Dynamic Random-Access Memory — Wikipedia](https://en.wikipedia.org/wiki/Dynamic_random-access_memory) — DRAM 구조, 1T1C 셀, 리프레시 메커니즘
+> - [FlashAttention: Understanding GPU Architecture — Medium](https://medium.com/@sachinkalsi/flashattention-understanding-gpu-architecture-part-1-0a8a9a0bb725) — GPU 메모리 계층(온칩 SRAM vs 오프칩 HBM) 시각적 설명
+> - [A Close Look at SRAM for Inference — Vik's Newsletter](https://www.viksnewsletter.com/p/a-close-look-at-sram-for-inference) — SRAM vs DRAM 밀도·용량 비교

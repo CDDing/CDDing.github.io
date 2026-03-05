@@ -164,7 +164,7 @@ int main() {
 
 | 메모리 유형 | 범위 | 특징 |
 |------------|------|------|
-| **공유 메모리(Shared)** | CUDA 블록 내 | 온칩, 빠른 접근 |
+| **공유 메모리(Shared)** | CUDA 블록 내 | 온칩, 빠른 접근<sup class="fn-ref"><a href="/notes/gpu-architecture/#온칩on-chip-vs-오프칩off-chip-메모리">[3]</a><span class="fn-tooltip"><span class="fn-title"><a href="/notes/gpu-architecture/#온칩on-chip-vs-오프칩off-chip-메모리">온칩 vs 오프칩 메모리</a></span><span class="fn-desc">온칩=GPU 다이 내부(SRAM), 오프칩=별도 메모리 칩(DRAM). 속도·용량·비용 트레이드오프.</span></span></sup> |
 | **전역 메모리(Global)** | 커널 내 모든 블록 | 오프칩, 모든 블록이 접근 가능 |
 | **로컬 메모리(Local)** | CUDA 스레드 내 | 스레드별 저장 공간 |
 | **상수 메모리(Constant)** | 읽기 전용 | 용량 작음, 소규모 데이터 |
