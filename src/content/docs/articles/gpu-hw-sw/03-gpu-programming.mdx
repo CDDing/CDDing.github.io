@@ -62,7 +62,7 @@ vectorAdd(/* 인자 */) {
 }
 ```
 
-각 스레드는 스레드 ID로 결정되는 `a[idx]`와 `b[idx]`에 접근하여 서로 다른 벡터 요소에 대해 동작한다.
+각 스레드는 스레드 ID로 결정되는 `a[idx]`와 `b[idx]`에 접근하여 서로 다른 벡터 요소에 대해 동작한다.<sup class="fn-ref"><a href="/notes/gpu-architecture/#spmd-데이터-인덱싱과-메모리-sm-매핑-시각화">[1]</a><span class="fn-tooltip"><span class="fn-title"><a href="/notes/gpu-architecture/#spmd-데이터-인덱싱과-메모리-sm-매핑-시각화">SPMD 데이터 인덱싱과 메모리-SM 매핑 시각화</a></span><span class="fn-desc">벡터 덧셈 예제로 블록→SM 배정, 인덱스 계산, 메모리 계층 접근 경로를 시각화한 노트.</span></span></sup>
 
 ### 실행 계층 구조
 
@@ -95,7 +95,7 @@ vectorAdd(/* 인자 */) {
 
 ### 공유 메모리
 
-공유 메모리는 온칩 스크래치 패드 메모리로, `__shared__`로 선언한다. 오프칩에 위치하는 전역 메모리보다 **접근이 훨씬 빠르다**. 공유 메모리는 **하나의 CUDA 블록 내에서만** 접근 가능하다.
+공유 메모리는 온칩 스크래치 패드 메모리로, `__shared__`로 선언한다. 오프칩에 위치하는 전역 메모리보다 **접근이 훨씬 빠르다**. 공유 메모리는 **하나의 CUDA 블록 내에서만** 접근 가능하다.<sup class="fn-ref"><a href="/notes/gpu-architecture/#공유-메모리는-sm-소유-블록-단위-파티셔닝">[2]</a><span class="fn-tooltip"><span class="fn-title"><a href="/notes/gpu-architecture/#공유-메모리는-sm-소유-블록-단위-파티셔닝">공유 메모리는 SM 소유, 블록 단위 파티셔닝</a></span><span class="fn-desc">물리적으로는 SM의 온칩 SRAM이고, 논리적으로 블록 단위로 파티셔닝된다. L1 캐시와 unified data cache를 공유.</span></span></sup>
 
 ```cuda
 __global__ void vectorAdd(int* a, int* b, int* c) {
