@@ -665,49 +665,6 @@ starlight-menu-button button:hover {
   color: var(--cd-header-text) !important;
 }
 
-/* ===== Recent Updates List ===== */
-.recent-updates {
-  max-width: var(--sl-content-width);
-  margin: 0 auto;
-  padding: 0 1rem;
-}
-
-.recent-updates h2 {
-  font-size: var(--sl-text-h3);
-  color: var(--cd-text-heading);
-  margin-bottom: 1rem;
-  font-weight: 600;
-}
-
-.update-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.update-item {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 0.6rem 0;
-  border-bottom: 1px solid var(--cd-border-subtle);
-}
-
-.update-item:last-child {
-  border-bottom: none;
-}
-
-.category-badge {
-  display: inline-block;
-  padding: 2px 8px;
-  border-radius: 12px;
-  font-size: 0.68rem;
-  font-family: var(--sl-font-mono);
-  font-weight: 500;
-  white-space: nowrap;
-  flex-shrink: 0;
-}
-
 .badge-vulkan {
   background: rgba(239, 68, 68, 0.1);
   color: #f87171;
@@ -744,35 +701,6 @@ starlight-menu-button button:hover {
   border: 1px solid rgba(37, 99, 235, 0.2);
 }
 
-.update-link {
-  color: var(--cd-text-primary);
-  text-decoration: none;
-  font-size: var(--sl-text-sm);
-  font-weight: 500;
-  flex: 1;
-  min-width: 0;
-  transition: color 0.15s;
-}
-
-.update-link:hover {
-  color: var(--cd-text-link);
-}
-
-.update-item time {
-  color: var(--cd-text-secondary);
-  font-size: var(--sl-text-xs);
-  font-family: var(--sl-font-mono);
-  white-space: nowrap;
-  flex-shrink: 0;
-}
-
-.update-empty {
-  color: var(--cd-text-secondary);
-  font-size: var(--sl-text-sm);
-  font-style: italic;
-  margin: 0;
-}
-
 @media (max-width: 30rem) {
   .update-item {
     flex-wrap: wrap;
@@ -801,27 +729,15 @@ starlight-menu-button button:hover {
 
 /* ===== Notes System ===== */
 
-/* Date separator */
-.note-date {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin: 32px 0 24px;
-  font-size: var(--sl-text-xs);
+/* 로그 상세 상단의 날짜 */
+.note-date-inline {
+  font-size: 0.68rem;
   font-family: var(--sl-font-mono);
   color: var(--cd-text-secondary);
-  font-weight: 500;
-}
-
-.note-date::after {
-  content: '';
-  flex: 1;
-  height: 1px;
-  background: var(--cd-border-subtle);
-}
-
-.note-content .note-date:first-child {
-  margin-top: 8px;
+  padding: 2px 10px;
+  border-radius: 12px;
+  background: var(--cd-bg-subtle, rgba(128, 128, 128, 0.1));
+  white-space: nowrap;
 }
 
 /* Note meta (tags area) */
@@ -960,19 +876,6 @@ starlight-menu-button button:hover {
   background: var(--cd-accent-bg);
   border-color: var(--cd-accent);
   color: var(--cd-accent);
-}
-
-/* Notes badge for updates */
-.badge-notes {
-  background: rgba(167, 139, 250, 0.1);
-  color: #a78bfa;
-  border: 1px solid rgba(167, 139, 250, 0.3);
-}
-
-:root[data-theme='light'] .badge-notes {
-  background: rgba(124, 58, 237, 0.08);
-  color: #7c3aed;
-  border: 1px solid rgba(124, 58, 237, 0.2);
 }
 
 /* ===== Print Styles ===== */
