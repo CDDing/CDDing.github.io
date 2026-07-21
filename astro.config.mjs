@@ -52,9 +52,9 @@ export default defineConfig({
           ],
         },
         {
-          label: 'Notes',
+          label: 'Log',
           items: [
-            { label: '전체 노트', link: '/notes/' },
+            { label: '전체 로그', link: '/log/' },
           ],
         },
       ],
