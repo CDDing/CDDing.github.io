@@ -9,11 +9,21 @@ const notesSchema = z.object({
   tags: z.array(z.string()),
 });
 
+const logSchema = z.object({
+  title: z.string(),
+  date: z.coerce.date(),
+  tags: z.array(z.string()),
+});
+
 export const collections = {
   docs: defineCollection({ loader: docsLoader(), schema: docsSchema() }),
   i18n: defineCollection({ loader: i18nLoader(), schema: i18nSchema() }),
   notes: defineCollection({
     loader: glob({ pattern: '**/*.md', base: './src/content/notes' }),
     schema: notesSchema,
+  }),
+  log: defineCollection({
+    loader: glob({ pattern: '**/*.md', base: './src/content/log' }),
+    schema: logSchema,
   }),
 };
