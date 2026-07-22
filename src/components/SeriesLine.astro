@@ -1,0 +1,33 @@
+---
+import { getSeriesMeta } from '../data/series';
+
+interface Props {
+  seriesId: string;
+  index: number;
+  total: number;
+}
+
+const { seriesId, index, total } = Astro.props;
+const { title } = getSeriesMeta(seriesId);
+---
+
+<a class="series-line" href={`/series/${seriesId}/`}>
+  {title} · {index + 1}/{total} <span aria-hidden="true">→</span>
+</a>
+
+<style>
+  /* 한 줄 텍스트 링크. 박스·배경·배지를 두지 않는다 —
+     번역 17편 전부가 시리즈 소속이라 매 글에 뜨고,
+     바로 아래 본문 첫 줄도 `> 원본:` 인용문(민트 배경)이라 색 박스가 연달아 두 개가 된다. */
+  .series-line {
+    display: inline-block;
+    margin-bottom: 14px;
+    color: var(--accent-strong);
+    font-size: 0.82rem;
+    font-weight: 550;
+    text-decoration: none;
+  }
+  .series-line:hover {
+    text-decoration: underline;
+  }
+</style>

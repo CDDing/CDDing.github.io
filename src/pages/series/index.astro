@@ -1,0 +1,108 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+import { getSeriesId, getSeriesPosts, formatKstDate } from '../../lib/posts';
+import { getSeriesMeta } from '../../data/series';
+
+const all = await getCollection('posts');
+const seriesIds = [
+  ...new Set(all.map((p) => getSeriesId(p.id)).filter((s): s is string => !!s)),
+].sort();
+
+const cards = seriesIds.map((id) => {
+  const posts = getSeriesPosts(all, id);
+  const dates = posts.map((p) => p.data.date.getTime());
+  const fmt = (t: number) => formatKstDate(new Date(t));
+  return {
+    id,
+    ...getSeriesMeta(id),
+    count: posts.length,
+    from: fmt(Math.min(...dates)),
+    to: fmt(Math.max(...dates)),
+  };
+});
+---
+
+<BaseLayout title="시리즈 · CDDing">
+  <div class="shell">
+    <h1 class="sr-only">시리즈</h1>
+
+    <nav class="tabs" aria-label="콘텐츠 종류">
+      <a class="tab" href="/">글 {all.length}</a>
+      <span class="tab is-active" aria-current="page">시리즈 {cards.length}</span>
+    </nav>
+
+    <div class="cards">
+      {cards.map((c) => (
+        <a class="card" href={`/series/${c.id}/`}>
+          <h2>{c.title}</h2>
+          <p class="desc">{c.desc}</p>
+          <p class="meta">{c.count}편 · {c.from} – {c.to}</p>
+        </a>
+      ))}
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .tabs {
+    display: flex;
+    gap: 24px;
+    margin-top: 32px;
+    border-bottom: 1px solid var(--divider);
+  }
+  .tab {
+    color: var(--text-muted);
+    font-size: 0.88rem;
+    padding-bottom: 10px;
+    position: relative;
+  }
+  .tab:hover {
+    color: var(--heading);
+  }
+  .tab.is-active {
+    color: var(--heading);
+    font-weight: 600;
+  }
+  .tab.is-active::after {
+    content: '';
+    position: absolute;
+    inset-inline: 0;
+    bottom: -1px;
+    height: 2px;
+    border-radius: 2px;
+    background: var(--accent);
+  }
+  .cards {
+    margin-top: 22px;
+  }
+  .card {
+    display: block;
+    padding: 18px 20px;
+    margin-bottom: 12px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+  }
+  .card:hover {
+    border-color: var(--accent-border);
+  }
+  .card h2 {
+    margin: 0;
+    color: var(--heading);
+    font-size: 1.05rem;
+    font-weight: 660;
+    letter-spacing: -0.02em;
+  }
+  .desc {
+    margin: 6px 0 0;
+    color: var(--text);
+    font-size: 0.86rem;
+    line-height: 1.65;
+  }
+  .meta {
+    margin: 10px 0 0;
+    color: var(--text-faint);
+    font-size: 0.78rem;
+  }
+</style>

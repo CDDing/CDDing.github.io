@@ -1,0 +1,113 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+import { getSeriesId, getSeriesPosts, formatKstDate } from '../../lib/posts';
+import { getSeriesMeta } from '../../data/series';
+
+export async function getStaticPaths() {
+  const all = await getCollection('posts');
+  const ids = [
+    ...new Set(all.map((p) => getSeriesId(p.id)).filter((s): s is string => !!s)),
+  ];
+  return ids.map((id) => ({
+    params: { slug: id },
+    props: { seriesId: id, posts: getSeriesPosts(all, id) },
+  }));
+}
+
+const { seriesId, posts } = Astro.props;
+const { title, desc } = getSeriesMeta(seriesId);
+const dates = posts.map((p) => p.data.date.getTime());
+const fmt = (t: number) => formatKstDate(new Date(t));
+---
+
+<BaseLayout title={`${title} · CDDing`} description={desc}>
+  <div class="shell">
+    <header class="head">
+      <p class="label">시리즈</p>
+      <h1>{title}</h1>
+      <p class="desc">{desc}</p>
+      <p class="meta">
+        {posts.length}편 · {fmt(Math.min(...dates))} – {fmt(Math.max(...dates))}
+      </p>
+    </header>
+
+    <ol class="chapters">
+      {posts.map((p, i) => (
+        <li>
+          <a href={`/posts/${p.id}/`}>
+            <span class="no">{String(p.data.order ?? i).padStart(2, '0')}</span>
+            <span class="ttl">{p.data.title}</span>
+            <span class="date">{fmt(p.data.date.getTime()).slice(5)}</span>
+          </a>
+        </li>
+      ))}
+    </ol>
+  </div>
+</BaseLayout>
+
+<style>
+  .head {
+    padding: 34px 0 22px;
+    border-bottom: 1px solid var(--divider);
+  }
+  .label {
+    margin: 0 0 8px;
+    color: var(--accent-strong);
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+  }
+  .head h1 {
+    margin: 0;
+    color: var(--heading);
+    font-size: 1.5rem;
+    font-weight: 720;
+    letter-spacing: -0.03em;
+  }
+  .desc {
+    margin: 8px 0 0;
+    color: var(--text);
+    font-size: 0.9rem;
+    line-height: 1.7;
+    max-width: 56ch;
+  }
+  .meta {
+    margin: 12px 0 0;
+    color: var(--text-faint);
+    font-size: 0.8rem;
+  }
+  .chapters {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .chapters a {
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+    padding: 13px 0;
+    border-bottom: 1px solid var(--divider);
+  }
+  .chapters a:hover .ttl {
+    color: var(--accent-strong);
+  }
+  .no {
+    flex-shrink: 0;
+    width: 24px;
+    color: var(--text-faint);
+    font-size: 0.8rem;
+    font-variant-numeric: tabular-nums;
+  }
+  .ttl {
+    color: var(--heading);
+    font-size: 0.95rem;
+    font-weight: 520;
+  }
+  .date {
+    margin-left: auto;
+    flex-shrink: 0;
+    color: var(--text-faint);
+    font-size: 0.78rem;
+  }
+</style>

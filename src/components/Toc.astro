@@ -1,0 +1,58 @@
+---
+interface Props {
+  headings: { depth: number; slug: string; text: string }[];
+}
+
+const { headings } = Astro.props;
+const items = headings.filter((h) => h.depth === 2 || h.depth === 3);
+---
+
+{items.length > 0 && (
+  <nav class="toc" aria-label="목차">
+    <p class="toc-head">목차</p>
+    <ul>
+      {items.map((h) => (
+        <li class={h.depth === 3 ? 'is-sub' : ''}>
+          <a href={`#${h.slug}`}>{h.text}</a>
+        </li>
+      ))}
+    </ul>
+  </nav>
+)}
+
+<style>
+  .toc {
+    position: sticky;
+    top: 24px;
+    align-self: start;
+  }
+  .toc-head {
+    margin: 0 0 9px;
+    color: var(--text-faint);
+    font-size: 0.66rem;
+    font-weight: 700;
+    letter-spacing: 0.11em;
+    text-transform: uppercase;
+  }
+  ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  li {
+    line-height: 1.75;
+  }
+  li a {
+    color: var(--text-muted);
+    font-size: 0.76rem;
+  }
+  li a:hover {
+    color: var(--accent-strong);
+  }
+  .is-sub {
+    padding-left: 10px;
+  }
+  .is-sub a {
+    font-size: 0.72rem;
+  }
+</style>
