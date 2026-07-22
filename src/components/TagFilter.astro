@@ -1,0 +1,88 @@
+---
+interface Props {
+  categories: string[];
+}
+
+const { categories } = Astro.props;
+---
+
+<div class="filters" role="group" aria-label="태그 필터">
+  <button type="button" class="chip is-active" data-category="" aria-pressed="true">전체</button>
+  {categories.map((c) => (
+    <button type="button" class="chip" data-category={c} aria-pressed="false">{c}</button>
+  ))}
+</div>
+<p class="result" role="status" aria-live="polite"></p>
+
+<script>
+  const chips = document.querySelectorAll<HTMLButtonElement>('.chip');
+  const items = document.querySelectorAll<HTMLElement>('.item');
+  const result = document.querySelector<HTMLElement>('.result');
+
+  function topCategory(tag: string): string {
+    const i = tag.indexOf('/');
+    return i === -1 ? tag : tag.slice(0, i);
+  }
+
+  chips.forEach((chip) => {
+    chip.addEventListener('click', () => {
+      const category = chip.dataset.category ?? '';
+      chips.forEach((c) => {
+        const on = c === chip;
+        c.classList.toggle('is-active', on);
+        c.setAttribute('aria-pressed', String(on));
+      });
+
+      let shown = 0;
+      items.forEach((item) => {
+        const cats = (item.dataset.tags ?? '')
+          .split(',')
+          .filter(Boolean)
+          .map(topCategory);
+        const hide = category !== '' && !cats.includes(category);
+        item.hidden = hide;
+        if (!hide) shown++;
+      });
+
+      if (result) {
+        result.textContent =
+          category === '' ? `전체 ${shown}편` : `#${category} ${shown}편`;
+      }
+    });
+  });
+</script>
+
+<style>
+  .filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin: 18px 0 4px;
+  }
+  .chip {
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    color: var(--text-muted);
+    cursor: pointer;
+    font-family: inherit;
+    font-size: var(--text-tag);
+    padding: 3px 11px;
+  }
+  .chip:hover {
+    border-color: var(--accent-border);
+    color: var(--accent-strong);
+  }
+  .chip.is-active {
+    background: var(--accent-bg);
+    border-color: var(--accent-border);
+    color: var(--accent-strong);
+    font-weight: 600;
+  }
+  .result {
+    margin: 8px 0 0;
+    color: var(--text-muted);
+    font-size: 0.78rem;
+    min-height: 1.2em;
+  }
+</style>

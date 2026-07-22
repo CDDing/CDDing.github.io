@@ -1,0 +1,92 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PostListItem from '../../components/PostListItem.astro';
+import { getCollection } from 'astro:content';
+import { collectAllTags, filterByTag, sortForList } from '../../lib/posts';
+
+export async function getStaticPaths() {
+  const all = await getCollection('posts');
+  return collectAllTags(all).map((tag) => ({
+    params: { tag },
+    props: { tag, posts: sortForList(filterByTag(all, tag)), all },
+  }));
+}
+
+const { tag, posts, all } = Astro.props;
+const isCategory = !tag.includes('/');
+const siblings = isCategory
+  ? [
+      ...new Set(
+        all.flatMap((p) => p.data.tags).filter((t) => t.startsWith(tag + '/'))
+      ),
+    ].sort()
+  : [];
+---
+
+<BaseLayout title={`#${tag} · CDDing`} description={`${tag} 태그가 붙은 글`}>
+  <div class="shell">
+    <header class="head">
+      <h1>#{tag}</h1>
+      <p class="count">{posts.length}편</p>
+    </header>
+
+    {siblings.length > 0 && (
+      <div class="subs">
+        {siblings.map((s) => (
+          <a class="sub" href={`/tags/${s}/`}>
+            {s.slice(tag.length + 1)} ({filterByTag(all, s).length})
+          </a>
+        ))}
+      </div>
+    )}
+
+    <div class="list">
+      {posts.map((post) => <PostListItem post={post} />)}
+    </div>
+
+    <p class="back"><a href="/">← 전체 글</a></p>
+  </div>
+</BaseLayout>
+
+<style>
+  .head {
+    padding: 34px 0 16px;
+  }
+  .head h1 {
+    margin: 0;
+    color: var(--heading);
+    font-size: 1.5rem;
+    font-weight: 720;
+    letter-spacing: -0.03em;
+  }
+  .count {
+    margin: 6px 0 0;
+    color: var(--text-faint);
+    font-size: 0.82rem;
+  }
+  .subs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 10px;
+  }
+  .sub {
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    color: var(--text-muted);
+    font-size: var(--text-tag);
+    padding: 3px 11px;
+  }
+  .sub:hover {
+    background: var(--accent-bg);
+    border-color: var(--accent-border);
+    color: var(--accent-strong);
+  }
+  .back {
+    margin-top: 28px;
+  }
+  .back a {
+    color: var(--accent-strong);
+    font-size: 0.85rem;
+  }
+</style>

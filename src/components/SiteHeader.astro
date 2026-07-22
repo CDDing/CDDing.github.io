@@ -1,0 +1,55 @@
+---
+import ThemeToggle from './ThemeToggle.astro';
+
+const path = Astro.url.pathname;
+const isPosts =
+  path === '/' || path.startsWith('/posts') || path.startsWith('/tags');
+const isSeries = path.startsWith('/series');
+---
+
+<header>
+  <div class="inner shell">
+    <a href="/" class="logo">CDDing</a>
+    <nav aria-label="주요 메뉴">
+      <a href="/" aria-current={isPosts ? 'page' : undefined}>글</a>
+      <a href="/series/" aria-current={isSeries ? 'page' : undefined}>시리즈</a>
+    </nav>
+    <ThemeToggle />
+  </div>
+</header>
+
+<style>
+  header {
+    border-bottom: 1px solid var(--divider);
+  }
+  .inner {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    height: 56px;
+  }
+  .logo {
+    color: var(--heading);
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: -0.015em;
+  }
+  nav {
+    display: flex;
+    gap: 18px;
+  }
+  nav a {
+    color: var(--text-muted);
+    font-size: 0.88rem;
+  }
+  nav a:hover {
+    color: var(--heading);
+  }
+  nav a[aria-current='page'] {
+    color: var(--heading);
+    font-weight: 600;
+  }
+  .inner > :global(button) {
+    margin-left: auto;
+  }
+</style>

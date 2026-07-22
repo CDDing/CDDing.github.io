@@ -1,0 +1,68 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Profile from '../components/Profile.astro';
+import TagFilter from '../components/TagFilter.astro';
+import PostListItem from '../components/PostListItem.astro';
+import { getCollection } from 'astro:content';
+import { sortForList, collectCategories, getSeriesId } from '../lib/posts';
+
+const all = await getCollection('posts');
+const posts = sortForList(all);
+const categories = collectCategories(all);
+const seriesCount = new Set(
+  all.map((p) => getSeriesId(p.id)).filter(Boolean)
+).size;
+---
+
+<BaseLayout title="CDDing">
+  <div class="shell">
+    <h1 class="sr-only">CDDing — GPU와 그래픽스 학습 기록</h1>
+    <Profile />
+
+    <nav class="tabs" aria-label="콘텐츠 종류">
+      <span class="tab is-active" aria-current="page">글 {posts.length}</span>
+      <a class="tab" href="/series/">시리즈 {seriesCount}</a>
+    </nav>
+
+    <TagFilter categories={categories} />
+
+    <div class="list">
+      {posts.map((post) => <PostListItem post={post} />)}
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .tabs {
+    display: flex;
+    gap: 24px;
+    margin-top: 18px;
+    border-bottom: 1px solid var(--divider);
+  }
+  /* .tab 규칙은 series/index.astro와 동일하다 (Astro scoped style이라 공유되지 않는다) */
+  .tab {
+    color: var(--text-muted);
+    font-size: 0.88rem;
+    padding-bottom: 10px;
+    position: relative;
+  }
+  .tab:hover {
+    color: var(--heading);
+  }
+  .tab.is-active {
+    color: var(--heading);
+    font-weight: 600;
+  }
+  .tab.is-active::after {
+    content: '';
+    position: absolute;
+    inset-inline: 0;
+    bottom: -1px;
+    height: 2px;
+    border-radius: 2px;
+    background: var(--accent);
+  }
+  .list {
+    margin-top: 4px;
+  }
+</style>

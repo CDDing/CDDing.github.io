@@ -1,0 +1,58 @@
+<button id="theme-toggle" type="button" aria-label="테마 전환">
+  <span aria-hidden="true" data-icon-light>☾</span>
+  <span aria-hidden="true" data-icon-dark hidden>☀</span>
+</button>
+
+<script>
+  const btn = document.getElementById('theme-toggle')!;
+  const light = btn.querySelector('[data-icon-light]') as HTMLElement;
+  const dark = btn.querySelector('[data-icon-dark]') as HTMLElement;
+
+  function sync() {
+    const isDark = document.documentElement.dataset.theme === 'dark';
+    light.hidden = isDark;
+    dark.hidden = !isDark;
+    btn.setAttribute(
+      'aria-label',
+      isDark ? '라이트 모드로 전환' : '다크 모드로 전환'
+    );
+    btn.setAttribute('aria-pressed', String(isDark));
+  }
+
+  btn.addEventListener('click', () => {
+    const next =
+      document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+    document.documentElement.dataset.theme = next;
+    localStorage.setItem('theme', next);
+    sync();
+  });
+
+  // 토글을 한 번도 안 누른 방문자는 OS 설정을 계속 따라간다.
+  // 저장값이 생기면(= 직접 골랐으면) 더는 반응하지 않는다.
+  window
+    .matchMedia('(prefers-color-scheme: dark)')
+    .addEventListener('change', (e) => {
+      if (localStorage.getItem('theme')) return;
+      document.documentElement.dataset.theme = e.matches ? 'dark' : 'light';
+      sync();
+    });
+
+  sync();
+</script>
+
+<style>
+  button {
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text-muted);
+    cursor: pointer;
+    font-size: 0.85rem;
+    line-height: 1;
+    padding: 6px 9px;
+  }
+  button:hover {
+    border-color: var(--accent-border);
+    color: var(--accent);
+  }
+</style>

@@ -1,0 +1,21 @@
+---
+import PostLayout from '../../layouts/PostLayout.astro';
+import { getCollection, render } from 'astro:content';
+import { getSeriesPosition } from '../../lib/posts';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('posts');
+  return posts.map((post) => ({
+    params: { slug: post.id },
+    props: { post, all: posts },
+  }));
+}
+
+const { post, all } = Astro.props;
+const { Content, headings } = await render(post);
+const position = getSeriesPosition(all, post);
+---
+
+<PostLayout post={post} headings={headings} position={position}>
+  <Content />
+</PostLayout>

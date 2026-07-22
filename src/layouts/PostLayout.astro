@@ -1,0 +1,105 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import BaseLayout from './BaseLayout.astro';
+import SeriesLine from '../components/SeriesLine.astro';
+import PrevNext from '../components/PrevNext.astro';
+import Toc from '../components/Toc.astro';
+import { getSeriesId, formatKstDate } from '../lib/posts';
+
+interface Props {
+  post: CollectionEntry<'posts'>;
+  headings: { depth: number; slug: string; text: string }[];
+  position: {
+    prev: CollectionEntry<'posts'> | null;
+    next: CollectionEntry<'posts'> | null;
+    index: number;
+    total: number;
+  } | null;
+}
+
+const { post, headings, position } = Astro.props;
+const seriesId = getSeriesId(post.id);
+const dateStr = formatKstDate(post.data.date);
+---
+
+<BaseLayout title={post.data.title} description={post.data.summary}>
+  <div class="wrap">
+    <article class="art">
+      {seriesId && position && (
+        <SeriesLine
+          seriesId={seriesId}
+          index={position.index}
+          total={position.total}
+        />
+      )}
+
+      <h1 class="post-title">{post.data.title}</h1>
+      <div class="meta">
+        <time datetime={post.data.date.toISOString()}>{dateStr}</time>
+        {post.data.tags.map((tag) => (
+          <a class="tag" href={`/tags/${tag}/`}>#{tag}</a>
+        ))}
+      </div>
+
+      <div class="prose">
+        <slot />
+      </div>
+
+      {position && <PrevNext prev={position.prev} next={position.next} />}
+    </article>
+
+    <aside class="side">
+      <Toc headings={headings} />
+    </aside>
+  </div>
+</BaseLayout>
+
+<style>
+  .wrap {
+    display: grid;
+    grid-template-columns: 170px minmax(0, var(--content-width)) 170px;
+    gap: 36px;
+    justify-content: center;
+    padding: 32px 0 0;
+  }
+  /* 가로 패딩은 .art가 갖는다. .wrap에 두면 트랙 계산에 섞여
+     본문 좌단이 .shell(= max-width 720 + padding 0 20px)보다 20px 왼쪽으로 어긋난다. */
+  .art {
+    grid-column: 2;
+    padding: 0 20px;
+  }
+  .meta {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 26px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--divider);
+    color: var(--text-faint);
+    font-size: 0.78rem;
+  }
+  .tag {
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    color: var(--text-muted);
+    font-size: var(--text-tag);
+    padding: 2px 10px;
+  }
+  .tag:hover {
+    background: var(--accent-bg);
+    border-color: var(--accent-border);
+    color: var(--accent-strong);
+  }
+  @media (max-width: 1080px) {
+    .wrap {
+      grid-template-columns: minmax(0, var(--content-width));
+    }
+    .art {
+      grid-column: auto;
+    }
+    .side {
+      display: none;
+    }
+  }
+</style>

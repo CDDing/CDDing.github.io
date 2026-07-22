@@ -1,0 +1,286 @@
+/* ===== Fonts ===== */
+@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.min.css');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap');
+
+/* ===== Tokens — Light (default) ===== */
+:root,
+:root[data-theme='light'] {
+  --bg: #ffffff;
+  --surface: #f8f9fa;
+  --border: #e9ecef;
+  --divider: #f1f3f5;
+  --text-muted: #868e96;
+  --text-faint: #adb5bd;
+  --text: #495057;
+  --heading: #212529;
+  --accent: #12b886;
+  --accent-strong: #0ca678;
+  --accent-bg: #e6fcf5;
+  --accent-border: #96f2d7;
+
+  --font: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', Consolas, monospace;
+
+  --text-body: 0.95rem;
+  --text-list-title: 1.05rem;
+  --text-post-title: 1.65rem;
+  --text-tag: 0.72rem;
+  --leading: 1.85;
+  --content-width: 720px;
+}
+
+/* ===== Tokens — Dark ===== */
+:root[data-theme='dark'] {
+  --bg: #16171a;
+  --surface: #1e2023;
+  --border: #2c2f33;
+  --divider: #24272a;
+  --text-muted: #909399;
+  --text-faint: #6b6e73;
+  --text: #ced2d6;
+  --heading: #f1f3f5;
+  --accent: #38d9a9;
+  --accent-strong: #63e6be;
+  --accent-bg: rgba(56, 217, 169, 0.12);
+  --accent-border: rgba(56, 217, 169, 0.35);
+}
+
+/* 테마별로 분리한다. `light dark`로 고정하면 저장된 테마가 라이트인데 OS가 다크일 때
+   스크롤바·폼 컨트롤만 다크로 남는다. */
+:root,
+:root[data-theme='light'] {
+  color-scheme: light;
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+}
+
+/* ===== Base ===== */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font);
+  font-size: var(--text-body);
+  line-height: var(--leading);
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* ===== Accessibility ===== */
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  z-index: 100;
+  padding: 10px 16px;
+  background: var(--accent);
+  color: #fff;
+  border-radius: 0 0 8px 0;
+}
+
+.skip-link:focus {
+  left: 0;
+}
+
+/* 화면에는 안 보이지만 스크린리더·헤딩 탐색에는 잡히는 제목 */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* ===== Layout ===== */
+.shell {
+  max-width: var(--content-width);
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.site-footer {
+  max-width: var(--content-width);
+  margin: 64px auto 0;
+  padding: 24px 20px 40px;
+  border-top: 1px solid var(--divider);
+  color: var(--text-faint);
+  font-size: 0.8rem;
+}
+
+/* ===== 글 제목 =====
+   본문(.prose) 밖에 있다. 마크다운 본문에는 h1이 0개임을 확인했다. */
+.post-title {
+  margin: 0 0 10px;
+  color: var(--heading);
+  font-size: var(--text-post-title);
+  font-weight: 740;
+  letter-spacing: -0.033em;
+  line-height: 1.26;
+}
+
+/* ===== Markdown content ===== */
+.prose h2 {
+  margin: 34px 0 12px;
+  color: var(--heading);
+  font-size: 1.2rem;
+  font-weight: 680;
+  letter-spacing: -0.02em;
+}
+
+.prose h3 {
+  margin: 26px 0 10px;
+  color: var(--heading);
+  font-size: 1.02rem;
+  font-weight: 660;
+}
+
+/* `####`를 쓰는 문서가 4편 있다 (02-devsandqueues 9개, 04-synchronization 4개,
+   10-images 2개, cuda-guide/02 1개). 규칙이 없으면 브라우저 기본값이라 h3와 구분이 안 된다. */
+.prose h4 {
+  margin: 20px 0 8px;
+  color: var(--heading);
+  font-size: 0.95rem;
+  font-weight: 640;
+}
+
+.prose p,
+.prose li {
+  color: var(--text);
+}
+
+.prose a {
+  color: var(--accent-strong);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.prose strong {
+  color: var(--heading);
+  font-weight: 640;
+}
+
+.prose blockquote {
+  margin: 0 0 16px;
+  padding: 8px 16px;
+  background: var(--accent-bg);
+  border-left: 3px solid var(--accent);
+  border-radius: 0 8px 8px 0;
+}
+
+.prose blockquote p:last-child {
+  margin-bottom: 0;
+}
+
+.prose :not(pre) > code {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  font-family: var(--font-mono);
+  font-size: 0.84em;
+  padding: 1px 5px;
+  overflow-wrap: anywhere;
+}
+
+/* 본문 이미지 5개가 쓰는 클래스. 배경이 투명한 다이어그램을 다크에서도 읽히게 한다. */
+.prose .light-bg {
+  background: #ffffff;
+  padding: 16px;
+  border-radius: 8px;
+}
+
+.prose pre {
+  background: var(--surface) !important;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 0.8rem;
+  line-height: 1.7;
+  overflow-x: auto;
+  padding: 14px 16px;
+}
+
+.prose pre code {
+  font-family: var(--font-mono);
+}
+
+.prose table {
+  border: 1px solid var(--border);
+  border-collapse: separate;
+  border-spacing: 0;
+  border-radius: 8px;
+  display: block;
+  font-size: 0.85rem;
+  margin-bottom: 20px;
+  overflow-x: auto;
+}
+
+/* 셀은 break-word — min-content에 영향을 주지 않아 열이 뭉개지지 않는다.
+   `anywhere`를 쓰면 min-content가 한 글자까지 줄어 6열 표가 세로로 쪼개진다. */
+.prose th,
+.prose td {
+  overflow-wrap: break-word;
+}
+
+/* 표 안의 인라인 코드는 문단과 달리 강제 줄바꿈하지 않는다.
+   `vkBeginCommandBuffer` 같은 식별자가 한 글자씩 세로로 쪼개지는 것을 막는다. */
+.prose th :not(pre) > code,
+.prose td :not(pre) > code {
+  overflow-wrap: normal;
+}
+
+.prose th {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  color: var(--heading);
+  font-weight: 600;
+  padding: 9px 14px;
+  text-align: left;
+}
+
+.prose td {
+  border-bottom: 1px solid var(--divider);
+  padding: 9px 14px;
+}
+
+.prose tr:last-child td {
+  border-bottom: none;
+}
+
+.prose img {
+  border-radius: 8px;
+  display: block;
+  margin: 16px auto;
+  max-width: 100%;
+}
+
+/* Shiki 이중 테마 — 배경은 --surface를 유지하고 글자색만 다크 토큰으로 바꾼다.
+   `.astro-code`(= <pre>)에 transparent를 주면 코드블록 배경이 페이지 배경과 같아진다. */
+:root[data-theme='dark'] .astro-code,
+:root[data-theme='dark'] .astro-code span {
+  color: var(--shiki-dark) !important;
+}
+
+:root[data-theme='dark'] .astro-code {
+  background-color: var(--surface) !important;
+}

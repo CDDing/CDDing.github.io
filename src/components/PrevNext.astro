@@ -1,0 +1,85 @@
+---
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  prev: CollectionEntry<'posts'> | null;
+  next: CollectionEntry<'posts'> | null;
+}
+
+const { prev, next } = Astro.props;
+---
+
+<nav class="prevnext" aria-label="시리즈 내 이동">
+  {prev ? (
+    <a class="cell" href={`/posts/${prev.id}/`}>
+      <span class="lab">← 이전</span>
+      <span class="ttl">{prev.data.title}</span>
+    </a>
+  ) : (
+    <span class="cell is-empty">
+      <span class="lab">← 이전</span>
+      <span class="ttl">시리즈의 첫 글입니다</span>
+    </span>
+  )}
+  {next ? (
+    <a class="cell is-right" href={`/posts/${next.id}/`}>
+      <span class="lab">다음 →</span>
+      <span class="ttl">{next.data.title}</span>
+    </a>
+  ) : (
+    <span class="cell is-right is-empty">
+      <span class="lab">다음 →</span>
+      <span class="ttl">시리즈의 마지막 글입니다</span>
+    </span>
+  )}
+</nav>
+
+<style>
+  .prevnext {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 11px;
+    margin-top: 40px;
+    padding-top: 24px;
+    border-top: 1px solid var(--divider);
+  }
+  .cell {
+    display: block;
+    padding: 12px 15px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    text-decoration: none;
+  }
+  a.cell:hover {
+    border-color: var(--accent-border);
+  }
+  .is-right {
+    text-align: right;
+  }
+  .is-empty {
+    opacity: 0.5;
+  }
+  .lab {
+    display: block;
+    color: var(--text-faint);
+    font-size: 0.72rem;
+    margin-bottom: 4px;
+  }
+  .ttl {
+    display: block;
+    color: var(--heading);
+    font-size: 0.85rem;
+    font-weight: 550;
+    line-height: 1.4;
+  }
+  .is-empty .ttl {
+    color: var(--text-faint);
+    font-weight: 400;
+  }
+  @media (max-width: 640px) {
+    .prevnext {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
